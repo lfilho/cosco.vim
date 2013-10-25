@@ -1,8 +1,19 @@
-" If there isn't one, append a semi colon to the end of the current line.
-"
-" For programming languages using a semi colon at the end of statement.
-autocmd FileType c,cpp,css,java,javascript,perl,php,jade nmap <silent> ,; :call <SID>smartCommaOrSemiColon()<CR>
-autocmd FileType c,cpp,css,java,javascript,perl,php,jade inoremap <silent> ,; <ESC>:call <SID>smartCommaOrSemiColon()<CR>a
+" ==================================================
+" Example mapping it to both normal and insert mode:
+" ==================================================
+
+" autocmd FileType c,cpp,css,java,javascript,perl,php,jade nmap <silent> ,; :execute "CommaOrSemiColon"<CR>
+" autocmd FileType c,cpp,css,java,javascript,perl,php,jade inoremap <silent> ,; <ESC>:execute "CommaOrSemiColon"<CR>a
+
+" ========
+" Command:
+" ========
+
+command! CommaOrSemiColon call s:smartCommaOrSemiColon()
+
+" ==============
+" Main function:
+" ==============
 
 function! s:smartCommaOrSemiColon()
     let originalLineNum = line('.')
@@ -60,11 +71,10 @@ function! s:smartCommaOrSemiColon()
     call setpos('.', originalCursorPosition)
 endfunction
 
-"
 " =================
 " Helper functions:
 " =================
-"
+
 function! s:strip(string)
     return substitute(a:string, '^\s*\(.\{-}\)\s*$', '\1', '')
 endfunction
