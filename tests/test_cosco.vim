@@ -154,11 +154,11 @@ endfunction
 "
 
     " Next line is `,`
-    function! s:tc.test_prevIsCurlyBrace_nextIsComma()
+    function! s:tc.test_prevIsLeftCurlyBrace_nextIsComma()
     endfunction
 
     " Next line is whatever
-    function! s:tc.test_prevIsCurlyBrace_nextIsWhatever()
+    function! s:tc.test_prevIsLeftCurlyBrace_nextIsWhatever()
     endfunction
 
 "
@@ -168,9 +168,22 @@ endfunction
 "
 
     " Next line is `]`
-    function! s:tc.test_prevIsOpenBracket_nextStartsWithCloseBracket()
+    function! s:tc.test_prevIsLeftBracket_nextStartsWithRightBracket()
     endfunction
 
     " Next line is whatever
-    function! s:tc.test_prevIsOpenBracket_nextIsWhatever()
+    function! s:tc.test_prevIsLeftBracket_nextIsWhatever()
+    endfunction
+"
+" =============================
+" Previous line ending with `(`
+" =============================
+"
+
+    " Next line is `)`
+    function! s:tc.test_prevIsLeftParens_nextStartsWithRightParens()
+    endfunction
+
+    " Next line is whatever
+    function! s:tc.test_prevIsLeftParens_nextIsWhatever()
     endfunction

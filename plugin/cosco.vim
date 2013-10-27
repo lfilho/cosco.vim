@@ -65,6 +65,12 @@ function! s:smartCommaOrSemiColon()
         else
             exec("s/[,;]\\?$/,/")
         endif
+    elseif prevLineLastChar == '('
+        if nextLineFirstChar == ')'
+            exec("s/[,;]\\?$//")
+        else
+            exec("s/[,;]\\?$/,/")
+        endif
     else
         exec("s/[,;]\\?$/;/")
     endif
