@@ -51,6 +51,7 @@ function! s:smartCommaOrSemiColon()
         exec("s/[,;]\\?$/;/")
     elseif prevLineLastChar == '{'
         if nextLineLastChar == ','
+            " TODO idea: externalize this in the future into a "javascript" extension:
             if nextLine =~ '^var'
                 exec("s/[,;]\\?$/;/")
             endif
