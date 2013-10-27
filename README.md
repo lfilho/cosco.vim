@@ -70,5 +70,5 @@ Will change the `use strict` line ending to a comma (it thinks we are inside a h
    * Create a language extension mechanism, so we can override/extend the rules for language-specific syntaxes.
    * Write plugin's vim documentation
    * Write all the examples possible
-   * Use a test framework (avoid regression bugs!!)
-   * Maybe create a `examples/` folder to make testing easier?
+   * Improve test coverage
+   * Record a video with "real world" usage
