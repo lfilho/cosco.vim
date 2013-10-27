@@ -53,6 +53,10 @@ Many, many, many more examples to come.
 
   TODO
 
+## Tests
+
+Tests are done with [vim-unittest](https://github.com/h1mesuke/vim-unittest).
+
 ## Known caveats
 
 ```javascript
