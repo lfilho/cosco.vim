@@ -1,7 +1,8 @@
 "
 " To run the tests in this file, install:
 "     https://github.com/h1mesuke/vim-unittest
-" and then run :UnitTest
+" and then run:
+"     :UnitTest
 "
 
 let s:tc = unittest#testcase#new("Cosco.vim")
@@ -157,8 +158,16 @@ endfunction
     function! s:tc.test_prevIsLeftCurlyBrace_nextIsComma()
     endfunction
 
+    " Next line is `var .* ,`
+    function! s:tc.test_prevIsLeftCurlyBrace_nextIsVarComma()
+    endfunction
+
     " Next line is whatever
     function! s:tc.test_prevIsLeftCurlyBrace_nextIsWhatever()
+    endfunction
+
+    " Previous line is `var .*`
+    function! s:tc.test_prevIsVarLeftCurlyBrace_nextIsRightCurlyBrace()
     endfunction
 
 "

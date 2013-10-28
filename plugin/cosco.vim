@@ -51,17 +51,24 @@ function! s:smartCommaOrSemiColon()
         exec("s/[,;]\\?$/;/")
     elseif prevLineLastChar == '{'
         if nextLineLastChar == ','
-            " TODO idea: externalize this in the future into a "javascript" extension:
-            if nextLine =~ '^var'
+            " TODO idea: externalize this into a "javascript" extension:
+            if s:strip(nextLine) =~ '^var'
                 exec("s/[,;]\\?$/;/")
             endif
             exec("s/[,;]\\?$/,/")
+        " TODO idea: externalize this into a "javascript" extension:
+        elseif s:strip(prevLine) =~ '^var'
+            if nextLineFirstChar == '}'
+                exec("s/[,;]\\?$//")
+            endif
         else
             exec("s/[,;]\\?$/;/")
         endif
     elseif prevLineLastChar == '['
         if nextLineFirstChar == ']'
             exec("s/[,;]\\?$//")
+        elseif currentLineLastChar =~ '[}\])]'
+            exec("s/[,;]\\?$/;/")
         else
             exec("s/[,;]\\?$/,/")
         endif
