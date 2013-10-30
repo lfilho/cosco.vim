@@ -15,31 +15,13 @@ It:
 
 The best way to describe it is with examples.
 
-## Examples
+## Demo / Examples
 
 Examples (as well this plugin) were created with javascript in mind (but the plugin works for any kind of file).
 
-**Important:** For the examples below, consider:
+[![Click to watch the video](http://img.youtube.com/vi/xCSjdqf8sOY/0.jpg)](http://www.youtube.com/watch?v=xCSjdqf8sOY)
 
-* The cursor is in the middle line (in any column).
-* You can have any amount of blank lines padding your cursor line.
-* The `?` symbol means that it can be anything: a `,`, a `;` or blank;
-    * If `?` is either `;` or `,`, Cosco will **substitute** it. Otherwise, it will **append to** it;
-* The character you should pay attention for in the surrounding lines are also highlighted like this: `.`
-
-Before   | After
-------   | -----
-one`;`   | one;
-two`?`   | two;
-three`;` | three;
-
-Before   | After
-------   | -----
-one`,`   | one,
-two`?`   | two,
-three`,` | three,
-
-Many, many, many more examples to come.
+*(Click the image to watch the video)*
 
 ## Installation
 
