@@ -9,13 +9,13 @@
 " Command:
 " ========
 
-command! CommaOrSemiColon call s:smartCommaOrSemiColon()
+command! CommaOrSemiColon call cosco#commaOrSemiColon()
 
 " ==============
 " Main function:
 " ==============
 
-function! s:smartCommaOrSemiColon()
+function! cosco#commaOrSemiColon()
     let originalLineNum = line('.')
     let currentLine = getline(originalLineNum)
     let currentLineLastChar = matchstr(currentLine, '.$')
