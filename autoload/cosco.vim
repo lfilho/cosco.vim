@@ -34,10 +34,10 @@ function! cosco#commaOrSemiColon()
     let nextLineFirstChar = matchstr(s:strip(nextLine), '^.')
 
     if prevLineLastChar == ','
-        if nextLineLastChar == ','
-            exec("s/[,;]\\?$/,/")
-        elseif nextLineFirstChar =~ '[}\])]'
+        if nextLineFirstChar =~ '[}\])]'
             exec("s/[,;]\\?$//")
+        elseif nextLineLastChar == ','
+            exec("s/[,;]\\?$/,/")
         elseif nextLineIndentation < currentLineIndentation
             exec("s/[,;]\\?$/;/")
         elseif nextLineIndentation == currentLineIndentation
@@ -74,6 +74,8 @@ function! cosco#commaOrSemiColon()
         else
             exec("s/[,;]\\?$/,/")
         endif
+    elseif nextLineFirstChar == ']'
+        exec("s/[,;]\\?$//")
     else
         exec("s/[,;]\\?$/;/")
     endif
