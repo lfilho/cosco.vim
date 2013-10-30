@@ -1,15 +1,11 @@
-" ==================================================
-" Example mapping it to both normal and insert mode:
-" ==================================================
+" ===============================================
+" Examples on how to use it (also on the README):
+" ===============================================
 
-" autocmd FileType c,cpp,css,java,javascript,perl,php,jade nmap <silent> ,; :execute "CommaOrSemiColon"<CR>
-" autocmd FileType c,cpp,css,java,javascript,perl,php,jade inoremap <silent> ,; <ESC>:execute "CommaOrSemiColon"<CR>a
+" autocmd FileType c,cpp,css,java,javascript,perl,php,jade nmap <silent> ,; :call cosco#commaOrSemiColon()<CR>
+" autocmd FileType c,cpp,css,java,javascript,perl,php,jade inoremap <silent> ,; <ESC>:call cosco#commaOrSemiColon()"<CR>a
+" command! CommaOrSemiColon call cosco#commaOrSemiColon()
 
-" ========
-" Command:
-" ========
-
-command! CommaOrSemiColon call cosco#commaOrSemiColon()
 
 " ==============
 " Main function:

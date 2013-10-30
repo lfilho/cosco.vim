@@ -50,23 +50,27 @@ Many, many, many more examples to come.
 
 ## Usage
 
-Cosco command won't override any mappings you might already have.
-It will only provide you a new command `CommaOrSemiColon` that you can use on its or with a mapping (both `normal` or `insert` modes!).
+Cosco command won't override any mappings or commands you might already have. You have to add them yourself. (Good vim plugin writing practice!).
+Here you can find two examples on how to do this. Put them on your `.vimrc`
 
 ### Using it via command
 
 ```VimL
-:CommaOrSemiColon
+command! CommaOrSemiColon call cosco#commaOrSemiColon()
 ```
+
+and then you can just issue `:CommaOrSemiColon`.
 
 ### Using it via mappings
 
-Example mapping they key combo `,;` to the command, in both `normal` and `insert` modes:
+Example mapping the key combo `,;` for both `normal` and `insert` modes:
 
 ```VimL
-autocmd FileType c,cpp,css,java,javascript,perl,php,jade nmap <silent> ,; :execute "CommaOrSemiColon"<CR>
-autocmd FileType c,cpp,css,java,javascript,perl,php,jade inoremap <silent> ,; <ESC>:execute "CommaOrSemiColon"<CR>a
+autocmd FileType c,cpp,css,java,javascript,perl,php,jade nmap <silent> ,; :call cosco#commaOrSemiColon()<CR>
+autocmd FileType c,cpp,css,java,javascript,perl,php,jade inoremap <silent> ,; <ESC>:call cosco#commaOrSemiColon()"<CR>a
 ```
+
+and then you can just type `,;`.
 
 ## Tests
 
