@@ -32,16 +32,16 @@ endfunction
         normal! 2G
 
         " Current line has no specific ending
-        exec "CommaOrSemiColon"
+        call cosco#commaOrSemiColon()
         call self.assert_equal('two,', getline('.'))
 
         " Current line ends in `,` (shouldn't add an extra one)
-        exec "CommaOrSemiColon"
+        call cosco#commaOrSemiColon()
         call self.assert_equal('two,', getline('.'))
 
         " Current line ends in `;` (should replace it with `,`)
         normal! 0f,r;
-        exec "CommaOrSemiColon"
+        call cosco#commaOrSemiColon()
         call self.assert_equal('two,', getline('.'))
     endfunction
 
@@ -56,17 +56,17 @@ endfunction
         normal! 2G
 
         " Current line has no specific ending
-        exec "CommaOrSemiColon"
+        call cosco#commaOrSemiColon()
         call self.assert_equal('two', getline('.'))
 
         " Current line ends in `,`
         normal! A,
-        exec "CommaOrSemiColon"
+        call cosco#commaOrSemiColon()
         call self.assert_equal('two', getline('.'))
 
         " Current line ends in `;`
         normal! A;
-        exec "CommaOrSemiColon"
+        call cosco#commaOrSemiColon()
         call self.assert_equal('two', getline('.'))
     endfunction
 
@@ -81,16 +81,16 @@ endfunction
         normal! 2G
 
         " Current line has no specific ending
-        exec "CommaOrSemiColon"
+        call cosco#commaOrSemiColon()
         call self.assert_equal('    two;', getline('.'))
 
         " Current line ends in `,`
         normal! f;r,
-        exec "CommaOrSemiColon"
+        call cosco#commaOrSemiColon()
         call self.assert_equal('    two;', getline('.'))
 
         " Current line ends in `;`
-        exec "CommaOrSemiColon"
+        call cosco#commaOrSemiColon()
         call self.assert_equal('    two;', getline('.'))
     endfunction
 
@@ -105,16 +105,16 @@ endfunction
         normal! 2G
 
         " Current line has no specific ending
-        exec "CommaOrSemiColon"
+        call cosco#commaOrSemiColon()
         call self.assert_equal('    two,', getline('.'))
 
         " Current line ends in `,`
-        exec "CommaOrSemiColon"
+        call cosco#commaOrSemiColon()
         call self.assert_equal('    two,', getline('.'))
 
         " Current line ends in `;`
         normal! f,r;
-        exec "CommaOrSemiColon"
+        call cosco#commaOrSemiColon()
         call self.assert_equal('    two,', getline('.'))
     endfunction
 
@@ -134,17 +134,17 @@ endfunction
             normal! 2G
 
             " Current line has no specific ending
-            exec "CommaOrSemiColon"
+            call cosco#commaOrSemiColon()
             call self.assert_equal('two;', getline('.'))
 
             " Current line ends in `,`
             normal! f;r,
-            exec "CommaOrSemiColon"
+            call cosco#commaOrSemiColon()
             call self.assert_equal('two;', getline('.'))
 
             " Current line ends in `;`
             normal! f,r;
-            exec "CommaOrSemiColon"
+            call cosco#commaOrSemiColon()
             call self.assert_equal('two;', getline('.'))
     endfunction
 
