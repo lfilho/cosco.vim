@@ -12,75 +12,77 @@
 " ==============
 
 function! cosco#commaOrSemiColon()
-    let originalLineNum = line('.')
-    let s:currentLine = getline(originalLineNum)
-    let s:currentLineLastChar = matchstr(s:currentLine, '.$')
-    let s:currentLineIndentation = indent(originalLineNum)
+    let b:originalLineNum = line('.')
+    let b:currentLine = getline(b:originalLineNum)
+    let b:currentLineLastChar = matchstr(b:currentLine, '.$')
+    let b:currentLineIndentation = indent(b:originalLineNum)
 
     if (s:hasUnactionableLines())
         return
     endif
 
-    let originalCursorPosition = getpos('.')
+    let b:originalCursorPosition = getpos('.')
 
-    let nextLine = s:getNextNonBlankLine(originalLineNum)
-    let prevLine = s:getPrevNonBlankLine(originalLineNum)
+    let b:nextLine = s:getNextNonBlankLine(b:originalLineNum)
+    let b:prevLine = s:getPrevNonBlankLine(b:originalLineNum)
 
-    let nextLineIndentation = indent(s:getNextNonBlankLineNum(originalLineNum))
-    let prevLineIndentation = indent(s:getPrevNonBlankLineNum(originalLineNum))
+    let b:nextLineIndentation = indent(s:getNextNonBlankLineNum(b:originalLineNum))
+    let b:prevLineIndentation = indent(s:getPrevNonBlankLineNum(b:originalLineNum))
 
-    let prevLineLastChar = matchstr(prevLine, '.$')
-    let nextLineLastChar = matchstr(nextLine, '.$')
-    let nextLineFirstChar = matchstr(s:strip(nextLine), '^.')
+    let b:prevLineLastChar = matchstr(b:prevLine, '.$')
+    let b:nextLineLastChar = matchstr(b:nextLine, '.$')
+    let b:nextLineFirstChar = matchstr(s:strip(b:nextLine), '^.')
 
-    if prevLineLastChar == ','
-        if nextLineFirstChar =~ '[}\])]'
-            exec("s/[,;]\\?$//")
-        elseif nextLineLastChar == ','
-            exec("s/[,;]\\?$/,/")
-        elseif nextLineIndentation < s:currentLineIndentation
-            exec("s/[,;]\\?$/;/")
-        elseif nextLineIndentation == s:currentLineIndentation
-            exec("s/[,;]\\?$/,/")
+    if b:prevLineLastChar == ','
+        if b:nextLineFirstChar =~ '[}\])]'
+            exec("s/[,;]\\?$//e")
+        elseif b:nextLineLastChar == ','
+            exec("s/[,;]\\?$/,/e")
+        elseif b:nextLineIndentation < b:currentLineIndentation
+            exec("s/[,;]\\?$/;/e")
+        elseif b:nextLineIndentation == b:currentLineIndentation
+            exec("s/[,;]\\?$/,/e")
         endif
-    elseif prevLineLastChar == ';'
-        exec("s/[,;]\\?$/;/")
-    elseif prevLineLastChar == '{'
-        if nextLineLastChar == ','
+    elseif b:prevLineLastChar == ';'
+        exec("s/[,;]\\?$/;/e")
+    elseif b:prevLineLastChar == '{'
+        if b:nextLineLastChar == ','
             " TODO idea: externalize this into a "javascript" extension:
-            if s:strip(nextLine) =~ '^var'
-                exec("s/[,;]\\?$/;/")
+            if s:strip(b:nextLine) =~ '^var'
+                exec("s/[,;]\\?$/;/e")
             endif
-            exec("s/[,;]\\?$/,/")
+            exec("s/[,;]\\?$/,/e")
         " TODO idea: externalize this into a "javascript" extension:
-        elseif s:strip(prevLine) =~ '^var'
-            if nextLineFirstChar == '}'
-                exec("s/[,;]\\?$//")
+        elseif s:strip(b:prevLine) =~ '^var'
+            if b:nextLineFirstChar == '}'
+                exec("s/[,;]\\?$//e")
             endif
         else
-            exec("s/[,;]\\?$/;/")
+            exec("s/[,;]\\?$/;/e")
         endif
-    elseif prevLineLastChar == '['
-        if nextLineFirstChar == ']'
-            exec("s/[,;]\\?$//")
-        elseif s:currentLineLastChar =~ '[}\])]'
-            exec("s/[,;]\\?$/;/")
+    elseif b:prevLineLastChar == '['
+        if b:nextLineFirstChar == ']'
+            exec("s/[,;]\\?$//e")
+        elseif b:currentLineLastChar =~ '[}\])]'
+            exec("s/[,;]\\?$/;/e");
         else
-            exec("s/[,;]\\?$/,/")
+            exec("s/[,;]\\?$/,/e")
         endif
-    elseif prevLineLastChar == '('
-        if nextLineFirstChar == ')'
-            exec("s/[,;]\\?$//")
+    elseif b:prevLineLastChar == '('
+        if b:nextLineFirstChar == ')'
+            exec("s/[,;]\\?$//e")
         else
-            exec("s/[,;]\\?$/,/")
+            exec("s/[,;]\\?$/,/e")
         endif
-    elseif nextLineFirstChar == ']'
-        exec("s/[,;]\\?$//")
+    elseif b:nextLineFirstChar == ']'
+        exec("s/[,;]\\?$//e")
     else
-        exec("s/[,;]\\?$/;/")
+        exec("s/[,;]\\?$/;/e")
     endif
 
-    call setpos('.', originalCursorPosition)
+    call s:filetypeOverrides()
+
+    call setpos('.', b:originalCursorPosition)
 endfunction
 
 " =================
@@ -123,7 +125,15 @@ function! s:getFutureNonBlankLineNum(lineNum, direction, limitLineNum)
 endfunction
 
 function! s:hasUnactionableLines()
-    if (s:strip(s:currentLine) == '' || s:currentLineLastChar =~ '[{[(]')
+    if (s:strip(b:currentLine) == '' || b:currentLineLastChar =~ '[{[(]')
         return 1
     endif
+endfunction
+
+function! s:filetypeOverrides()
+    try
+        exec 'call filetypes#'.&ft.'#after()'
+    catch
+        " No filetypes for the current buffer filetype
+    endtry
 endfunction
