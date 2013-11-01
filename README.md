@@ -25,9 +25,9 @@ Examples (as well this plugin) were created with javascript in mind (but the plu
 
 ## Installation
 
-1. Add `lfilho/cosco.vim` to your Vundle, NeoBundle, pathogen, or manually copy the files... You know the deal.
-2. Run your Vundle/NeoBundle/pathogen process of updating / installing new bundles...
-3. Use it (see next section how)
+1. Add `lfilho/cosco.vim` to your [Vundle](https://github.com/gmarik/vundle), [NeoBundle](https://github.com/Shougo/neobundle.vim), [pathogen](https://github.com/tpope/vim-pathogen), or [manually copy the files](http://superuser.com/a/404820)... You know the deal.
+2. Run your Vundle/NeoBundle/pathogen process of updating / installing new bundles... (Links above should help you)
+3. [Use it](#usage)
 4. Profit!
 
 ## Usage
