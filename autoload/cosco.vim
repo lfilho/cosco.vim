@@ -13,11 +13,11 @@
 
 function! cosco#commaOrSemiColon()
     let originalLineNum = line('.')
-    let currentLine = getline(originalLineNum)
-    let currentLineLastChar = matchstr(currentLine, '.$')
-    let currentLineIndentation = indent(originalLineNum)
+    let s:currentLine = getline(originalLineNum)
+    let s:currentLineLastChar = matchstr(s:currentLine, '.$')
+    let s:currentLineIndentation = indent(originalLineNum)
 
-    if (s:strip(currentLine) == '' || currentLineLastChar =~ '[{[(]')
+    if (s:hasUnactionableLines())
         return
     endif
 
@@ -38,9 +38,9 @@ function! cosco#commaOrSemiColon()
             exec("s/[,;]\\?$//")
         elseif nextLineLastChar == ','
             exec("s/[,;]\\?$/,/")
-        elseif nextLineIndentation < currentLineIndentation
+        elseif nextLineIndentation < s:currentLineIndentation
             exec("s/[,;]\\?$/;/")
-        elseif nextLineIndentation == currentLineIndentation
+        elseif nextLineIndentation == s:currentLineIndentation
             exec("s/[,;]\\?$/,/")
         endif
     elseif prevLineLastChar == ';'
@@ -63,7 +63,7 @@ function! cosco#commaOrSemiColon()
     elseif prevLineLastChar == '['
         if nextLineFirstChar == ']'
             exec("s/[,;]\\?$//")
-        elseif currentLineLastChar =~ '[}\])]'
+        elseif s:currentLineLastChar =~ '[}\])]'
             exec("s/[,;]\\?$/;/")
         else
             exec("s/[,;]\\?$/,/")
@@ -120,4 +120,10 @@ function! s:getFutureNonBlankLineNum(lineNum, direction, limitLineNum)
     endif
 
     return l:futureLineNum
+endfunction
+
+function! s:hasUnactionableLines()
+    if (s:strip(s:currentLine) == '' || s:currentLineLastChar =~ '[{[(]')
+        return 1
+    endif
 endfunction
