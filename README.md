@@ -72,8 +72,6 @@ Will change the `use strict` line ending to a comma (it thinks we are inside a h
 
 ## TODO and wish list
 
-* Create a language extension mechanism, so we can override/extend the rules for language-specific syntaxes.
 * Write plugin's vim documentation
 * Write all the examples possible
 * Improve test coverage
-* Record a video with "real world" usage
