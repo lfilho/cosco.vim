@@ -12,9 +12,12 @@
 " ==============
 
 function! cosco#commaOrSemiColon()
+    let b:wasExtensionExecuted = 0
+
     let b:originalLineNum = line('.')
     let b:currentLine = getline(b:originalLineNum)
     let b:currentLineLastChar = matchstr(b:currentLine, '.$')
+    let b:currentLineFirstChar = matchstr(b:currentLine, '^.')
     let b:currentLineIndentation = indent(b:originalLineNum)
 
     if (s:hasUnactionableLines())
@@ -32,6 +35,13 @@ function! cosco#commaOrSemiColon()
     let b:prevLineLastChar = matchstr(b:prevLine, '.$')
     let b:nextLineLastChar = matchstr(b:nextLine, '.$')
     let b:nextLineFirstChar = matchstr(s:strip(b:nextLine), '^.')
+
+    call s:filetypeOverrides()
+
+    if (b:wasExtensionExecuted)
+        call setpos('.', b:originalCursorPosition)
+        return
+    endif
 
     if b:prevLineLastChar == ','
         if b:nextLineFirstChar =~ '[}\])]'
@@ -79,8 +89,6 @@ function! cosco#commaOrSemiColon()
     else
         exec("s/[,;]\\?$/;/e")
     endif
-
-    call s:filetypeOverrides()
 
     call setpos('.', b:originalCursorPosition)
 endfunction
@@ -132,7 +140,7 @@ endfunction
 
 function! s:filetypeOverrides()
     try
-        exec 'call filetypes#'.&ft.'#after()'
+        exec 'call filetypes#'.&ft.'#parse()'
     catch
         " No filetypes for the current buffer filetype
     endtry
