@@ -75,3 +75,4 @@ Will change the `use strict` line ending to a comma (it thinks we are inside a h
 * Write plugin's vim documentation
 * Write all the examples possible
 * Improve test coverage
+* Write mappings examples using autocommand grouping
