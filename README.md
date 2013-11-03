@@ -3,6 +3,8 @@ cosco.vim
 
 **Co**mma and **s**emi-**co**lon insertion bliss for vim.
 
+*Cosco's official vim.org page: http://www.vim.org/scripts/script.php?script_id=4758*
+
 ## What Cosco does:
 
 Appends, substitutes or removes a comma or a semi-colon to the end of your line, based on its context.
