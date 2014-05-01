@@ -6,6 +6,58 @@
 " autocmd FileType c,cpp,css,java,javascript,perl,php,jade inoremap <silent> ,; <ESC>:call cosco#commaOrSemiColon()"<CR>a
 " command! CommaOrSemiColon call cosco#commaOrSemiColon()
 
+" =================
+" Helper functions:
+" =================
+
+function! s:strip(string)
+    return substitute(a:string, '^\s*\(.\{-}\)\s*$', '\1', '')
+endfunction
+
+function! s:getNextNonBlankLineNum(lineNum)
+    return s:getFutureNonBlankLineNum(a:lineNum, 1, line('$'))
+endfunction
+
+function! s:getPrevNonBlankLineNum(lineNum)
+    return s:getFutureNonBlankLineNum(a:lineNum, -1, 1)
+endfunction
+
+function! s:getNextNonBlankLine(lineNum)
+    return getline(s:getNextNonBlankLineNum(a:lineNum))
+endfunction
+
+function! s:getPrevNonBlankLine(lineNum)
+    return getline(s:getPrevNonBlankLineNum(a:lineNum))
+endfunction
+
+function! s:getFutureNonBlankLineNum(lineNum, direction, limitLineNum)
+    if (a:lineNum == a:limitLineNum)
+        return ''
+    endif
+
+    let l:futureLineNum = a:lineNum + (1 * a:direction)
+    let l:futureLine = s:strip(getline(l:futureLineNum))
+
+    if (l:futureLine == '')
+        return s:getFutureNonBlankLineNum(l:futureLineNum, a:direction, a:limitLineNum)
+    endif
+
+    return l:futureLineNum
+endfunction
+
+function! s:hasUnactionableLines()
+    if (s:strip(b:currentLine) == '' || b:currentLineLastChar =~ '[{[(]')
+        return 1
+    endif
+endfunction
+
+function! s:filetypeOverrides()
+    try
+        exec 'call filetypes#'.&ft.'#parse()'
+    catch
+        " No filetypes for the current buffer filetype
+    endtry
+endfunction
 
 " ==============
 " Main function:
@@ -93,55 +145,3 @@ function! cosco#commaOrSemiColon()
     call setpos('.', b:originalCursorPosition)
 endfunction
 
-" =================
-" Helper functions:
-" =================
-
-function! s:strip(string)
-    return substitute(a:string, '^\s*\(.\{-}\)\s*$', '\1', '')
-endfunction
-
-function! s:getNextNonBlankLineNum(lineNum)
-    return s:getFutureNonBlankLineNum(a:lineNum, 1, line('$'))
-endfunction
-
-function! s:getPrevNonBlankLineNum(lineNum)
-    return s:getFutureNonBlankLineNum(a:lineNum, -1, 1)
-endfunction
-
-function! s:getNextNonBlankLine(lineNum)
-    return getline(s:getNextNonBlankLineNum(a:lineNum))
-endfunction
-
-function! s:getPrevNonBlankLine(lineNum)
-    return getline(s:getPrevNonBlankLineNum(a:lineNum))
-endfunction
-
-function! s:getFutureNonBlankLineNum(lineNum, direction, limitLineNum)
-    if (a:lineNum == a:limitLineNum)
-        return ''
-    endif
-
-    let l:futureLineNum = a:lineNum + (1 * a:direction)
-    let l:futureLine = s:strip(getline(l:futureLineNum))
-
-    if (l:futureLine == '')
-        return s:getFutureNonBlankLineNum(l:futureLineNum, a:direction, a:limitLineNum)
-    endif
-
-    return l:futureLineNum
-endfunction
-
-function! s:hasUnactionableLines()
-    if (s:strip(b:currentLine) == '' || b:currentLineLastChar =~ '[{[(]')
-        return 1
-    endif
-endfunction
-
-function! s:filetypeOverrides()
-    try
-        exec 'call filetypes#'.&ft.'#parse()'
-    catch
-        " No filetypes for the current buffer filetype
-    endtry
-endfunction
