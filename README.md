@@ -35,7 +35,7 @@ Examples (as well this plugin) were created with javascript in mind (but the plu
 ## Usage
 
 Cosco command won't override any mappings or commands you might already have. You have to add them yourself. (Good vim plugin writing practice!).
-Here you can find two examples on how to do this. Put them on your `.vimrc`
+Here you can find two examples on how to do this. Put them on your `.vimrc`.
 
 ### Using it via command
 
@@ -47,14 +47,14 @@ and then you can just issue `:CommaOrSemiColon`.
 
 ### Using it via mappings
 
-Example mapping the key combo `,;` for both `normal` and `insert` modes:
+Example mapping the key combo `<Leader>;` for both `normal` and `insert` modes:
 
 ```VimL
-autocmd FileType javascript,css,YOUR_LANG nmap <silent> ,; :call cosco#commaOrSemiColon()<CR>
-autocmd FileType javascript,css,YOUR_LANG inoremap <silent> ,; <ESC>:call cosco#commaOrSemiColon()"<CR>a
+autocmd FileType javascript,css,YOUR_LANG noremap <silent> <Leader>; :call cosco#commaOrSemiColon()<CR>
+autocmd FileType javascript,css,YOUR_LANG inoremap <silent> <Leader>; <c-o>:call cosco#commaOrSemiColon()<CR>
 ```
 
-and then you can just type `,;`.
+and then you can just type `<Leader>;`.
 
 ## Tests
 
