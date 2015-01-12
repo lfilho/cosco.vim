@@ -47,10 +47,10 @@ and then you can just issue `:CommaOrSemiColon`.
 
 ### Using it via mappings
 
-Example mapping the key combo `<Leader>;` for both `normal` and `insert` modes:
+An example mapping, using the key combo `<Leader>;` for both `normal` and `insert` modes:
 
 ```VimL
-autocmd FileType javascript,css,YOUR_LANG noremap <silent> <Leader>; :call cosco#commaOrSemiColon()<CR>
+autocmd FileType javascript,css,YOUR_LANG nnoremap <silent> <Leader>; :call cosco#commaOrSemiColon()<CR>
 autocmd FileType javascript,css,YOUR_LANG inoremap <silent> <Leader>; <c-o>:call cosco#commaOrSemiColon()<CR>
 ```
 
