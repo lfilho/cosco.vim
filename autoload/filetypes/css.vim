@@ -12,7 +12,6 @@ function! filetypes#css#parse()
     elseif (b:originalLineNum == 1)
         exec("s/[,;]\\?$/,/e")
     elseif (b:currentLineFirstChar == '}')
-        echom 'yow'
         exec("s/[,;]\\?$//e")
     else
         let b:wasExtensionExecuted = 0

@@ -1,4 +1,4 @@
-" Matlab behaves like so: we can toggle the semicolon at the end on and off
+" Octave behaves like so: we can toggle the semicolon at the end on and off
 function! filetypes#matlab#parse()
     let b:wasExtensionExecuted = 1
 
