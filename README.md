@@ -78,3 +78,4 @@ Will change the `use strict` line ending to a comma (it thinks we are inside a h
 * Write all the examples possible
 * Improve test coverage
 * Write mappings examples using autocommand grouping
+* Write a better javascript integration, possible reading from an option .eslint and/or .jshint file (settings for comma dangling, etc)

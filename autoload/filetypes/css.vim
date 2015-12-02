@@ -2,17 +2,17 @@ function! filetypes#css#parse()
     let b:wasExtensionExecuted = 1
 
     if (b:prevLineLastChar == '}')
-        exec("s/[,;]\\?$/,/e")
+        call cosco#makeItAComma()
     elseif (b:nextLineLastChar == '}')
-        exec("s/[,;]\\?$/;/e")
+        call cosco#makeItASemiColon()
     elseif (b:prevLineLastChar == '{')
-        exec("s/[,;]\\?$/;/e")
+        call cosco#makeItASemiColon()
     elseif (b:prevLineLastChar == ',')
-        exec("s/[,;]\\?$/,/e")
+        call cosco#makeItAComma()
     elseif (b:originalLineNum == 1)
-        exec("s/[,;]\\?$/,/e")
+        call cosco#makeItAComma()
     elseif (b:currentLineFirstChar == '}')
-        exec("s/[,;]\\?$//e")
+        call cosco#makeItASemiColon()
     else
         let b:wasExtensionExecuted = 0
     endif

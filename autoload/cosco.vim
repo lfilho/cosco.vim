@@ -51,12 +51,44 @@ function! s:hasUnactionableLines()
     endif
 endfunction
 
+" =====================
+" Filetypes extensions:
+" =====================
+
 function! s:filetypeOverrides()
     try
         exec 'call filetypes#'.&ft.'#parse()'
     catch
         " No filetypes for the current buffer filetype
     endtry
+endfunction
+
+" ================================
+" Insertion and replace functions:
+" ================================
+
+function! cosco#removeCommaOrSemiColon()
+    if b:currentLineLastChar =~ '[,;]'
+        exec("s/[,;]\\?$//e")
+    end
+endfunction
+
+function! cosco#makeItASemiColon()
+    " Prevent unnecessary buffer change:
+    if b:currentLineLastChar == ';'
+        return
+    endif
+
+    exec("s/[,;]\\?$/;/e")
+endfunction
+
+function! cosco#makeItAComma()
+    " Prevent unnecessary buffer change:
+    if b:currentLineLastChar == ','
+        return
+    endif
+
+    exec("s/[,;]\\?$/,/e")
 endfunction
 
 " ==============
@@ -96,52 +128,49 @@ function! cosco#commaOrSemiColon()
     endif
 
     if b:prevLineLastChar == ','
-        if b:nextLineFirstChar =~ '[}\])]'
-            exec("s/[,;]\\?$//e")
-        elseif b:nextLineLastChar == ','
-            exec("s/[,;]\\?$/,/e")
+        if b:nextLineLastChar == ','
+            call cosco#makeItAComma()
         elseif b:nextLineIndentation < b:currentLineIndentation
-            exec("s/[,;]\\?$/;/e")
+            call cosco#makeItASemiColon()
         elseif b:nextLineIndentation == b:currentLineIndentation
-            exec("s/[,;]\\?$/,/e")
+            call cosco#makeItAComma()
         endif
     elseif b:prevLineLastChar == ';'
-        exec("s/[,;]\\?$/;/e")
+        call cosco#makeItASemiColon()
     elseif b:prevLineLastChar == '{'
         if b:nextLineLastChar == ','
             " TODO idea: externalize this into a "javascript" extension:
             if s:strip(b:nextLine) =~ '^var'
-                exec("s/[,;]\\?$/;/e")
+                call cosco#makeItASemiColon()
             endif
-            exec("s/[,;]\\?$/,/e")
+            call cosco#makeItAComma()
         " TODO idea: externalize this into a "javascript" extension:
         elseif s:strip(b:prevLine) =~ '^var'
             if b:nextLineFirstChar == '}'
-                exec("s/[,;]\\?$//e")
+                call cosco#removeCommaOrSemiColon()
             endif
         else
-            exec("s/[,;]\\?$/;/e")
+            call cosco#makeItASemiColon()
         endif
     elseif b:prevLineLastChar == '['
         if b:nextLineFirstChar == ']'
-            exec("s/[,;]\\?$//e")
+            call cosco#removeCommaOrSemiColon()
         elseif b:currentLineLastChar =~ '[}\])]'
-            exec("s/[,;]\\?$/;/e");
+            call cosco#makeItASemiColon()
         else
-            exec("s/[,;]\\?$/,/e")
+            call cosco#makeItAComma()
         endif
     elseif b:prevLineLastChar == '('
         if b:nextLineFirstChar == ')'
-            exec("s/[,;]\\?$//e")
+            call cosco#removeCommaOrSemiColon()
         else
-            exec("s/[,;]\\?$/,/e")
+            call cosco#makeItAComma()
         endif
     elseif b:nextLineFirstChar == ']'
-        exec("s/[,;]\\?$//e")
+        call cosco#removeCommaOrSemiColon()
     else
-        exec("s/[,;]\\?$/;/e")
+        call cosco#makeItASemiColon()
     endif
 
     call setpos('.', b:originalCursorPosition)
 endfunction
-
