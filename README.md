@@ -51,7 +51,7 @@ autocmd FileType javascript,css,YOUR_LANG inoremap <silent> <Leader>; <c-o>:call
 
 and then you can just type `<Leader>;`.
 
-## Auto CommaOrSemicolon Insertion Mode
+## Auto CommaOrSemicolon Insertion Mode (Experimental)
 
 Auto insertion of a comma or a semicolon is also supported through the function:
 
@@ -80,6 +80,9 @@ By default what triggers the auto insertion is leaving insert mode (`InsertLeave
 ```vim
 let g:auto_comma_or_semicolon_events = ["InsertLeave"]
 ```
+__**Warning**__:
+
+> *This feature is currently experimental and still not mature enough to work for many vim events (e.g:* "TextChangedI"*)*
 
 ## Tests
 
