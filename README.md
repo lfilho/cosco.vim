@@ -38,12 +38,7 @@ Cosco command won't override any mappings or commands you might already have. Yo
 Here you can find two examples on how to do this. Put them on your `.vimrc`.
 
 ### Using it via command
-
-```VimL
-command! CommaOrSemiColon call cosco#commaOrSemiColon()
-```
-
-and then you can just issue `:CommaOrSemiColon`.
+Go to the target line then: `:CommaOrSemiColon`
 
 ### Using it via mappings
 
@@ -55,6 +50,36 @@ autocmd FileType javascript,css,YOUR_LANG inoremap <silent> <Leader>; <c-o>:call
 ```
 
 and then you can just type `<Leader>;`.
+
+## Auto CommaOrSemicolon Insertion Mode
+
+Auto insertion of a comma or a semicolon is also supported through the function:
+
+```vim
+:call AutoCommaOrSemiColon()
+```
+To activate the AutoCommaOrSemiColon by default add the following line to your `.vimrc`:
+
+```vim
+let g:auto_comma_or_semicolon = 1     " Default : 0
+```
+
+For faster toggle you can use the command:
+
+```vim
+:AutoCommaOrSemiColonToggle
+```
+or better map it to the desireable key-bindings,`F9` for example:
+
+```vim
+nmap <F9> :AutoCommaOrSemiColonToggle<CR>
+```
+This will show a missage about the current state of the auto insetion mode (ON / OFF).  
+By default what triggers the auto insertion is leaving insert mode (`InsertLeave` event). This can be modified by changing the desired events in the events list:
+
+```vim
+let g:auto_comma_or_semicolon_events = ["InsertLeave"]
+```
 
 ## Tests
 
