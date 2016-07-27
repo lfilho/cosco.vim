@@ -74,7 +74,7 @@ or better map it to the desireable key-bindings,`F9` for example:
 ```vim
 nmap <F9> :AutoCommaOrSemiColonToggle<CR>
 ```
-This will show a missage about the current state of the auto insetion mode (ON / OFF).  
+This will show a message about the current state of the auto insetion mode (ON / OFF).  
 By default what triggers the auto insertion is leaving insert mode (`InsertLeave` event). This can be modified by changing the desired events in the events list:
 
 ```vim
