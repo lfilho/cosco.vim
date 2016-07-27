@@ -82,7 +82,7 @@ let g:auto_comma_or_semicolon_events = ["InsertLeave"]
 ```
 __**Warning**__:
 
-> *This feature is currently experimental and still not mature enough to work for many vim events (e.g:* "TextChangedI"*)*
+> *This feature is currently experimental and still not mature enough to work for many vim events (e.g:* "TextChangedI"*) or in many places in your code, so use with care.*
 
 ## Tests
 
