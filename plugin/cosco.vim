@@ -28,7 +28,6 @@ endfunction
 
 command! CommaOrSemiColon call cosco#commaOrSemiColon()
 function! AutoCommaOrSemiColon()
-    let b:currentLineLastChar = matchstr(getline(line('.')), '.$')
     if g:auto_comma_or_semicolon >= 1
         call cosco#commaOrSemiColon()
     endif
