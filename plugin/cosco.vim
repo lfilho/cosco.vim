@@ -47,5 +47,5 @@ command! CommaOrSemiColon call cosco#commaOrSemiColon()
 "====================================
 
 nnoremap <silent> <Plug>(cosco-commaOrSemiColon)
-            \ :<C-u>call cosco#commaOrSemiColon()<CR>
-            \ :<C-u>call repeat#set("\<Plug>(cosco-commaOrSemiColon)")<CR>
+            \:<C-u>call cosco#commaOrSemiColon()<CR>
+            \:<C-u>call repeat#set("\<Plug>(cosco-commaOrSemiColon)")<CR>
