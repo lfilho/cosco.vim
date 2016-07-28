@@ -5,7 +5,7 @@
 " ===============================================
 
 " autocmd FileType c,cpp,css,java,javascript,perl,php,jade nmap <silent> <Leader>; <Plug>(cosco-commaOrSemiColon)
-" autocmd FileType c,cpp,css,java,javascript,perl,php,jade imap <silent> <Leader>; <c-o><Plug>(cosco-commaOrSemiColon);
+" autocmd FileType c,cpp,css,java,javascript,perl,php,jade imap <silent> <Leader>; <c-o><Plug>(cosco-commaOrSemiColon)
 " command! CommaOrSemiColon call cosco#commaOrSemiColon()
 
 if !exists("g:auto_comma_or_semicolon")
@@ -42,8 +42,10 @@ endfunction
 
 command! CommaOrSemiColon call cosco#commaOrSemiColon()
 
-"================
-" <Plug> mapping:
-"================
+"====================================
+" <Plug> mapping with repeat support:
+"====================================
 
-nnoremap <silent> <Plug>(cosco-commaOrSemiColon) \ :<C-u>call cosco#commaOrSemiColon()<CR>
+nnoremap <silent> <Plug>(cosco-commaOrSemiColon)
+            \ :<C-u>call cosco#commaOrSemiColon()<CR>
+            \ :<C-u>call repeat#set("\<Plug>(cosco-commaOrSemiColon)")<CR>
