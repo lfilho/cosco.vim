@@ -25,6 +25,10 @@ Examples (as well this plugin) were created with javascript in mind (but the plu
 
 *(Click the image to watch the video)*
 
+## Dependencies
+
+This plugin depends on [tpope/vim-repeat](https://github.com/tpope/vim-repeat) being installed in order to have the repeat functionality.
+
 ## Installation
 
 1. Add `lfilho/cosco.vim` to your [Vundle](https://github.com/gmarik/vundle), [NeoBundle](https://github.com/Shougo/neobundle.vim), [pathogen](https://github.com/tpope/vim-pathogen), or [manually copy the files](http://superuser.com/a/404820)... You know the deal.
@@ -38,6 +42,7 @@ Cosco command won't override any mappings or commands you might already have. Yo
 Here you can find two examples on how to do this. Put them on your `.vimrc`.
 
 ### Using it via command
+
 Go to the target line then: `:CommaOrSemiColon`
 
 ### Using it via mappings
@@ -45,11 +50,15 @@ Go to the target line then: `:CommaOrSemiColon`
 An example mapping, using the key combo `<Leader>;` for both `normal` and `insert` modes:
 
 ```VimL
-autocmd FileType javascript,css,YOUR_LANG nnoremap <silent> <Leader>; :call cosco#commaOrSemiColon()<CR>
-autocmd FileType javascript,css,YOUR_LANG inoremap <silent> <Leader>; <c-o>:call cosco#commaOrSemiColon()<CR>
+autocmd FileType javascript,css,YOUR_LANG nnoremap <silent> <Leader>; <Plug>(cosco-commaOrSemiColon)
+autocmd FileType javascript,css,YOUR_LANG inoremap <silent> <Leader>; <c-o><Plug>(cosco-commaOrSemiColon)
 ```
 
 and then you can just type `<Leader>;`.
+
+### Repeating it
+
+You can repeat it with `.` key as long as you have [tpope/vim-repeat](https://github.com/tpope/vim-repeat) installed.
 
 ## Auto CommaOrSemicolon Insertion Mode (Experimental)
 
@@ -74,7 +83,7 @@ or better map it to the desireable key-bindings,`F9` for example:
 ```vim
 nmap <F9> :AutoCommaOrSemiColonToggle<CR>
 ```
-This will show a message about the current state of the auto insetion mode (ON / OFF).  
+This will show a message about the current state of the auto insetion mode (ON / OFF).
 By default what triggers the auto insertion is leaving insert mode (`InsertLeave` event). This can be modified by changing the desired events in the events list:
 
 ```vim
