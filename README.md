@@ -50,8 +50,8 @@ Go to the target line then: `:CommaOrSemiColon`
 An example mapping, using the key combo `<Leader>;` for both `normal` and `insert` modes:
 
 ```VimL
-autocmd FileType javascript,css,YOUR_LANG nnoremap <silent> <Leader>; <Plug>(cosco-commaOrSemiColon)
-autocmd FileType javascript,css,YOUR_LANG inoremap <silent> <Leader>; <c-o><Plug>(cosco-commaOrSemiColon)
+autocmd FileType javascript,css,YOUR_LANG nmap <silent> <Leader>; <Plug>(cosco-commaOrSemiColon)
+autocmd FileType javascript,css,YOUR_LANG imap <silent> <Leader>; <c-o><Plug>(cosco-commaOrSemiColon)
 ```
 
 and then you can just type `<Leader>;`.
