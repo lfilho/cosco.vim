@@ -88,6 +88,11 @@ endfunction
 " ==============
 
 function! cosco#commaOrSemiColon()
+    " Don't run if we're in a readonly buffer:
+    if (&readonly == 1)
+        return
+    endif
+
     let b:wasExtensionExecuted = 0
 
     let b:originalLineNum = line('.')
