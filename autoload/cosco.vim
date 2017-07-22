@@ -38,14 +38,21 @@ function! s:getFutureNonBlankLineNum(lineNum, direction, limitLineNum)
 endfunction
 
 function! s:hasUnactionableLines()
+    " Ignores comment lines, if global option is configured
     if (g:cosco_ignore_comment_lines == 1)
         let l:isComment = synIDattr(synID(line("."),col("."),1),"name") =~ 'omment$'
-        if (l:isComment)
+        if l:isComment
             return 1
         endif
     endif
 
+    " Ignores empty lines or lines ending with opening ([{
     if (s:strip(b:currentLine) == '' || b:currentLineLastChar =~ '[{[(]')
+        return 1
+    endif
+
+    " Ignores lines if the next one starts with a "{"
+    if b:nextLineFirstChar == '{'
         return 1
     endif
 endfunction
@@ -108,10 +115,6 @@ function! cosco#commaOrSemiColon()
     let b:currentLineFirstChar = matchstr(b:currentLine, '^.')
     let b:currentLineIndentation = indent(b:originalLineNum)
 
-    if (s:hasUnactionableLines())
-        return
-    endif
-
     let b:originalCursorPosition = getpos('.')
 
     let b:nextLine = s:getNextNonBlankLine(b:originalLineNum)
@@ -123,6 +126,10 @@ function! cosco#commaOrSemiColon()
     let b:prevLineLastChar = matchstr(b:prevLine, '.$')
     let b:nextLineLastChar = matchstr(b:nextLine, '.$')
     let b:nextLineFirstChar = matchstr(s:strip(b:nextLine), '^.')
+
+    if (s:hasUnactionableLines())
+        return
+    endif
 
     call s:filetypeOverrides()
 

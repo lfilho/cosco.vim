@@ -183,6 +183,7 @@ endfunction
     " Next line is whatever
     function! s:tc.test_prevIsLeftBracket_nextIsWhatever()
     endfunction
+
 "
 " =============================
 " Previous line ending with `(`
@@ -195,4 +196,25 @@ endfunction
 
     " Next line is whatever
     function! s:tc.test_prevIsLeftParens_nextIsWhatever()
+    endfunction
+
+"
+" ===========================
+" Next line starting with `{`
+" ===========================
+"
+
+    function! s:tc.test_nextStartsWithRightCurlyBrace()
+        put! = [
+            \ 'function nextLineBrace()',
+            \ '    {',
+            \ '        // Absolutely Barbaric',
+            \ '    }'
+        \]
+
+        normal! gg
+
+        " Current line has no specific ending
+        call cosco#commaOrSemiColon()
+        call self.assert_equal('function nextLineBrace()', getline('.'))
     endfunction

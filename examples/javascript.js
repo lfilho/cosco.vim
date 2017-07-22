@@ -24,7 +24,7 @@ define([
 
         testEight: {
             foo: 'bar',
-            bar: 'foo'
+            bar: 'foo',
             foo: 'bar',
         },
 
@@ -39,4 +39,10 @@ define([
 
     // Commented line
     // (shouldn't be changed if g:cosco_ignore_comment_lines is set to 1)
+
+
+    function nextLineBrace()
+    {
+        // Absolutely Barbaric
+    }
 });
