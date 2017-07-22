@@ -60,6 +60,32 @@ and then you can just type `<Leader>;`.
 
 You can repeat it with `.` key as long as you have [tpope/vim-repeat](https://github.com/tpope/vim-repeat) installed.
 
+## Configuration Options
+
+### Ignoring comment lines
+
+If you are in a comment line and don't want the plugin to act on it, put the following in your `.vimrc`:
+
+```vim
+let g:cosco_ignore_comment_lines = 1     " Default : 0
+```
+
+It uses the underlying vim syntax mechanism, so it will work for any language. Naturally, this requires `syntax` to be enabled in your vim.
+
+**Caveat:** You have to be **inside** the comment for this to work. That is, if you have the following line:
+
+```javascript
+var foo = 'bar' // A comment
+```
+
+Or a merely indented comment:
+
+```javascript
+    // A comment
+```
+
+And the cursor is placed anywhere before the `//`, it won't work as vim won't identify the current cursor position's syntax to be a comment. Pull Requests are welcome to improve this.
+
 ## Auto CommaOrSemicolon Insertion Mode (Experimental)
 
 Auto insertion of a comma or a semicolon is also supported through the function:

@@ -38,6 +38,13 @@ function! s:getFutureNonBlankLineNum(lineNum, direction, limitLineNum)
 endfunction
 
 function! s:hasUnactionableLines()
+    if (g:cosco_ignore_comment_lines == 1)
+        let l:isComment = synIDattr(synID(line("."),col("."),1),"name") =~ 'omment$'
+        if (l:isComment)
+            return 1
+        endif
+    endif
+
     if (s:strip(b:currentLine) == '' || b:currentLineLastChar =~ '[{[(]')
         return 1
     endif

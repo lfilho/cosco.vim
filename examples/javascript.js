@@ -35,5 +35,8 @@ define([
         ],
 
         testTen: null,
-    };
+    }
+
+    // Commented line
+    // (shouldn't be changed if g:cosco_ignore_comment_lines is set to 1)
 });
