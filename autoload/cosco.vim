@@ -40,7 +40,7 @@ endfunction
 function! s:hasUnactionableLines()
     " Ignores comment lines, if global option is configured
     if (g:cosco_ignore_comment_lines == 1)
-        let l:isComment = synIDattr(synID(line("."),col("."),1),"name") =~ 'omment$'
+        let l:isComment = synIDattr(synID(line("."),col("."),1),"name") =~ '\ccomment'
         if l:isComment
             return 1
         endif
