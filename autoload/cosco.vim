@@ -40,7 +40,7 @@ endfunction
 function! s:hasUnactionableLines()
     " Ignores comment lines, if global option is configured
     if (g:cosco_ignore_comment_lines == 1)
-        let l:isComment = synIDattr(synID(line("."),col("."),1),"name") =~ 'omment$'
+        let l:isComment = synIDattr(synID(line("."),col("."),1),"name") =~ '\ccomment'
         if l:isComment
             return 1
         endif
@@ -54,6 +54,26 @@ function! s:hasUnactionableLines()
     " Ignores lines if the next one starts with a "{"
     if b:nextLineFirstChar == '{'
         return 1
+    endif
+endfunction
+
+function! s:ignoreCurrentFiletype()
+    if(exists("g:cosco_filetype_whitelist"))
+        for i in g:cosco_filetype_whitelist
+            if (&ft == i)
+                return 0
+            endif
+        endfor
+        return 1
+    elseif(exists("g:cosco_filetype_blacklist"))
+        for i in g:cosco_filetype_blacklist
+            if(&ft == i)
+                return 1
+            endif
+        endfor
+        return 0
+    else
+        return 0
     endif
 endfunction
 
@@ -104,6 +124,11 @@ endfunction
 function! cosco#commaOrSemiColon()
     " Don't run if we're in a readonly buffer:
     if (&readonly == 1)
+        return
+    endif
+
+    " Dont run if current filetype has been disabled:
+    if (s:ignoreCurrentFiletype())
         return
     endif
 
