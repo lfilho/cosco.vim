@@ -86,6 +86,33 @@ Or a merely indented comment:
 
 And the cursor is placed anywhere before the `//`, it won't work as vim won't identify the current cursor position's syntax to be a comment. Pull Requests are welcome to improve this.
 
+### Ignoring filetypes
+
+If you want to explicitly declare a set of filetypes that cosco will ignore you can add one of the following lines to your `.vimrc`:
+
+```vim
+let g:cosco_filetype_whitelist = ['php', 'javascript']
+let g:cosco_filetype_blacklist = ['vim', 'bash']
+```
+
+These variables must be declared as a list (array) of languages recognized by vim
+
+**Whitelist**  
+The `g:cosco_filetype_whitelist` variable is used to declare a list of filetypes that cosco will work in. If this variable is declared, cosco will ignore any filetype that is not specified in the whitelist variable.
+
+**Blacklist**  
+The `g:cosco_filetype_blacklist` variable is used to declare a list of filetypes that cosco will ignore. If this variable is declared, cosco will ignore any filetype that is specified in the blacklist variable.
+
+If neither of these variables are declared in the `.vimrc` cosco will work in any filetype. 
+
+The `g:cosco_filetype_whitelist` variable will override and ignore the `g:cosco_filetype_blacklist` variable if both variables are declared in your `.vimrc`.
+
+**Getting the current filetype**  
+You can easily get the current filetype by calling:
+```vim
+:set ft?
+```
+
 ## Auto CommaOrSemicolon Insertion Mode (Experimental)
 
 Auto insertion of a comma or a semicolon is also supported through the function:
