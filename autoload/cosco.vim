@@ -166,6 +166,8 @@ function! cosco#commaOrSemiColon()
     if b:prevLineLastChar == ','
         if b:nextLineLastChar == ','
             call cosco#makeItAComma()
+        elseif b:nextLineFirstChar == ']'
+            call cosco#makeItAComma()
         elseif b:nextLineIndentation < b:currentLineIndentation
             call cosco#makeItASemiColon()
         elseif b:nextLineIndentation == b:currentLineIndentation
