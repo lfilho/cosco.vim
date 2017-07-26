@@ -64,21 +64,24 @@ function! s:hasUnactionableLines()
 endfunction
 
 function! s:ignoreCurrentFiletype()
-    if(exists("g:cosco_filetype_whitelist"))
+    if (exists("g:cosco_filetype_whitelist"))
         for i in g:cosco_filetype_whitelist
             if (&ft == i)
                 return 0
             endif
         endfor
+
         return 1
-    elseif(exists("g:cosco_filetype_blacklist"))
+    elseif (exists("g:cosco_filetype_blacklist"))
         for i in g:cosco_filetype_blacklist
-            if(&ft == i)
+            if (&ft == i)
                 return 1
             endif
         endfor
+
         return 0
     endif
+
     return 0
 endfunction
 
