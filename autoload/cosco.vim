@@ -1,3 +1,9 @@
+" ==============
+" Configuration:
+" ==============
+
+let g:cosco_ignore_comment_lines = get(g:, 'cosco_ignore_comment_lines', 0)
+
 " =================
 " Helper functions:
 " =================
@@ -72,9 +78,8 @@ function! s:ignoreCurrentFiletype()
             endif
         endfor
         return 0
-    else
-        return 0
     endif
+    return 0
 endfunction
 
 " =====================
