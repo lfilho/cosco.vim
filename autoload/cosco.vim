@@ -64,9 +64,10 @@ function! s:hasUnactionableLines()
 endfunction
 
 function! s:ignoreCurrentFiletype()
+    let filetypes = split(&ft, '\.')
     if (exists("g:cosco_filetype_whitelist"))
         for i in g:cosco_filetype_whitelist
-            if (&ft == i)
+            if (index(filetypes, i) > -1)
                 return 0
             endif
         endfor
@@ -74,7 +75,7 @@ function! s:ignoreCurrentFiletype()
         return 1
     elseif (exists("g:cosco_filetype_blacklist"))
         for i in g:cosco_filetype_blacklist
-            if (&ft == i)
+            if (index(filetypes, i) > -1)
                 return 1
             endif
         endfor
