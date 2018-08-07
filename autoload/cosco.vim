@@ -47,7 +47,7 @@ endfunction
 function! s:hasUnactionableLines()
     " Ignores comment lines, if global option is configured
     if (g:cosco_ignore_comment_lines == 1)
-        let l:isComment = synIDattr(synID(line("."),col("."),1),"name") =~ '\ccomment'
+        let l:isComment = synIDattr(synID(b:originalLineNum,col("."),1),"name") =~ '\ccomment'
         if l:isComment
             return 1
         endif
@@ -113,7 +113,7 @@ endfunction
 
 function! cosco#removeCommaOrSemiColon()
     if b:currentLineLastChar =~ '[,;]'
-        exec("s/[,;]\\?$//e")
+        exec(b:originalLineNum . "s/[,;]\\?$//e")
     end
 endfunction
 
@@ -123,7 +123,7 @@ function! cosco#makeItASemiColon()
         return
     endif
 
-    exec("s/[,;]\\?$/;/e")
+    exec(b:originalLineNum . "s/[,;]\\?$/;/e")
 endfunction
 
 function! cosco#makeItAComma()
@@ -132,14 +132,14 @@ function! cosco#makeItAComma()
         return
     endif
 
-    exec("s/[,;]\\?$/,/e")
+    exec(b:originalLineNum . "s/[,;]\\?$/,/e")
 endfunction
 
 " ==============
 " Main function:
 " ==============
 
-function! cosco#commaOrSemiColon()
+function! cosco#commaOrSemiColon(...)
     " Don't run if we're in a readonly buffer:
     if (&readonly == 1)
         return
@@ -152,7 +152,11 @@ function! cosco#commaOrSemiColon()
 
     let b:wasExtensionExecuted = 0
 
-    let b:originalLineNum = line('.')
+    if exists("a:1")
+        let b:originalLineNum = a:1
+    else
+        let b:originalLineNum = line('.')
+    endif
     let b:currentLine = getline(b:originalLineNum)
     let b:currentLineLastChar = matchstr(b:currentLine, '.$')
     let b:currentLineFirstChar = matchstr(b:currentLine, '^.')
@@ -183,6 +187,8 @@ function! cosco#commaOrSemiColon()
 
     if b:prevLineLastChar == ','
         if b:nextLineLastChar == ','
+            call cosco#makeItAComma()
+        elseif b:nextLineFirstChar == ']'
             call cosco#makeItAComma()
         elseif b:nextLineIndentation < b:currentLineIndentation
             call cosco#makeItASemiColon()

@@ -42,6 +42,8 @@ endfunction
 
 command! CommaOrSemiColon call cosco#commaOrSemiColon()
 
+command! CommaOrSemiColonPrevious call cosco#commaOrSemiColon((line('.') - 1))
+
 "====================================
 " <Plug> mapping with repeat support:
 "====================================

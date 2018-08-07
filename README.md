@@ -60,6 +60,18 @@ and then you can just type `<Leader>;`.
 
 You can repeat it with `.` key as long as you have [tpope/vim-repeat](https://github.com/tpope/vim-repeat) installed.
 
+### Using it on the previous line
+
+You can run `:CommaOrSemiColonPrevious` to add a comma or semicolon to the line directly above the current line. This is useful to create a mapping that checks the previous line every time you press enter while in insert mode. 
+
+### Previous Line Mappings
+
+Here is an example mapping for having cosco check the previous line every time you press enter:
+
+```Vim
+imap <cr> <cr><C-o>:CommaOrSemiColonPrevious<cr>
+```
+
 ## Configuration Options
 
 ### Ignoring comment lines
