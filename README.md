@@ -113,6 +113,18 @@ You can easily get the current filetype by calling:
 :set ft?
 ```
 
+**Custom regex ignore patterns per filetype**
+For more granular control, if you need to ignore a regex pattern per filetype you can use this dictionary `g:cosco_ignore_ft_pattern`, for example:
+
+```
+let g:cosco_ignore_ft_pattern = {
+      \ 'cpp': '^#',
+      \ 'c': '^#',
+      \ 'd': '^.*cornerCase',
+      \}
+
+```
+
 ## Auto CommaOrSemicolon Insertion Mode (Experimental)
 
 Auto insertion of a comma or a semicolon is also supported through the function:
