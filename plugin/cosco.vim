@@ -8,34 +8,34 @@
 " autocmd FileType c,cpp,css,java,javascript,perl,php,jade imap <silent> <Leader>; <c-o><Plug>(cosco-commaOrSemiColon)
 " command! CommaOrSemiColon call cosco#commaOrSemiColon()
 
-if !exists("g:auto_comma_or_semicolon")
-    let g:auto_comma_or_semicolon = 0
+if !exists("g:cosco_auto_comma_or_semicolon")
+    let g:cosco_auto_comma_or_semicolon = 0
 endif
 
-if !exists("g:auto_comma_or_semicolon_events")
-    let g:auto_comma_or_semicolon_events = ["InsertLeave"]
+if !exists("g:cosco_auto_comma_or_semicolon_events")
+    let g:cosco_auto_comma_or_semicolon_events = ["InsertLeave"]
 endif
 
 augroup auto_comma_or_semicolon
     autocmd!
-    for event in g:auto_comma_or_semicolon_events
+    for event in g:cosco_auto_comma_or_semicolon_events
         execute "au " . event . " * call AutoCommaOrSemiColon()"
     endfor
 augroup END
 
 command! AutoCommaOrSemiColonToggle :call AutoCommaOrSemiColonToggle()
 function! AutoCommaOrSemiColonToggle()
-    if g:auto_comma_or_semicolon >= 1
-        let g:auto_comma_or_semicolon = 0
+    if g:cosco_auto_comma_or_semicolon >= 1
+        let g:cosco_auto_comma_or_semicolon = 0
         echo "AutoCommaOrSemiColon is OFF"
     else
-        let g:auto_comma_or_semicolon = 1
+        let g:cosco_auto_comma_or_semicolon = 1
         echo "AutoCommaOrSemiColon is ON"
     endif
 endfunction
 
 function! AutoCommaOrSemiColon()
-    if g:auto_comma_or_semicolon >= 1
+    if g:cosco_auto_comma_or_semicolon >= 1
         call cosco#commaOrSemiColon()
     endif
 endfunction

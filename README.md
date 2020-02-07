@@ -135,7 +135,7 @@ Auto insertion of a comma or a semicolon is also supported through the function:
 To activate the AutoCommaOrSemiColon by default add the following line to your `.vimrc`:
 
 ```vim
-let g:auto_comma_or_semicolon = 1     " Default : 0
+let g:cosco_auto_comma_or_semicolon = 1     " Default : 0
 ```
 
 For faster toggle you can use the command:
@@ -152,7 +152,7 @@ This will show a message about the current state of the auto insetion mode (ON /
 By default what triggers the auto insertion is leaving insert mode (`InsertLeave` event). This can be modified by changing the desired events in the events list:
 
 ```vim
-let g:auto_comma_or_semicolon_events = ["InsertLeave"]
+let g:cosco_auto_comma_or_semicolon_events = ["InsertLeave"]
 ```
 __**Warning**__:
 
