@@ -1,7 +1,5 @@
 " Octave behaves like so: we can toggle the semicolon at the end on and off
 function! filetypes#matlab#parse()
-    let b:wasExtensionExecuted = 1
-
     if b:currentLineFirstChar == '%'
         " do nothing: it's a comment
     elseif s:strip(b:currentLine) =~ '^function'
@@ -14,4 +12,6 @@ function! filetypes#matlab#parse()
     else
         exec("s/$/;/")
     endif
+
+    return 1
 endfunction

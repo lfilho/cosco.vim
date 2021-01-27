@@ -1,229 +1,139 @@
-" ==============
-" Configuration:
-" ==============
-
-let g:cosco_ignore_comment_lines = get(g:, 'cosco_ignore_comment_lines', 0)
-let g:cosco_ignore_ft_pattern = get(g:, 'cosco_ignore_ft_pattern', {})
+" =========================================================
+" Filename: cosco.vim
+" Author: TornaxO7
+" Last changes: 27.01.21
+" Version: 1.0
+" Usage: 
+"     This is the main file of the cosco plugin.
+"     Here is the core function and some preparations
+"     of the plugin.
+" =========================================================
 
 " =================
-" Helper functions:
+" Preparations 
 " =================
+" disable cosco if:
+"   1. The current file is only readable
+"   2. The current file isn't in the whitelist
+if &readonly || get(g:cosco_whitelist, &ft, -1) == -1
+    let g:cosco_enable = 0
+endif
 
-function! s:strip(string)
-    return substitute(a:string, '^\s*\(.\{-}\)\s*$', '\1', '')
-endfunction
+" ############################
+"       Main function
+" ############################
 
-function! s:getNextNonBlankLineNum(lineNum)
-    return s:getFutureNonBlankLineNum(a:lineNum, 1, line('$'))
-endfunction
+" Return values:
+"   0 => Added comma/semicolon; Everything worked fine
+"   1 => Didn't add a comma/semicolon; (Probably) Something went wrong
+function cosco#CommaOrSemiColon()
 
-function! s:getPrevNonBlankLineNum(lineNum)
-    return s:getFutureNonBlankLineNum(a:lineNum, -1, 1)
-endfunction
-
-function! s:getNextNonBlankLine(lineNum)
-    return getline(s:getNextNonBlankLineNum(a:lineNum))
-endfunction
-
-function! s:getPrevNonBlankLine(lineNum)
-    return getline(s:getPrevNonBlankLineNum(a:lineNum))
-endfunction
-
-function! s:getFutureNonBlankLineNum(lineNum, direction, limitLineNum)
-    if (a:lineNum == a:limitLineNum)
-        return ''
-    endif
-
-    let l:futureLineNum = a:lineNum + (1 * a:direction)
-    let l:futureLine = s:strip(getline(l:futureLineNum))
-
-    if (l:futureLine == '')
-        return s:getFutureNonBlankLineNum(l:futureLineNum, a:direction, a:limitLineNum)
-    endif
-
-    return l:futureLineNum
-endfunction
-
-function! s:hasUnactionableLines()
-    " Ignores comment lines, if global option is configured
-    if (g:cosco_ignore_comment_lines == 1)
-        let l:isComment = synIDattr(synID(line("."),col("."),1),"name") =~ '\ccomment'
-        if l:isComment
-            return 1
-        endif
-    endif
-
-    " Ignores empty lines or lines ending with opening ([{
-    if (s:strip(b:currentLine) == '' || b:currentLineLastChar =~ '[{[(]')
-        return 1
-    endif
-
-    " Ignores lines if the next one starts with a "{"
-    if b:nextLineFirstChar == '{'
-        return 1
-    endif
-
-    " Ignores custom regex patterns given a file type.
-    let s:cur_ft = &filetype
-    if has_key(g:cosco_ignore_ft_pattern, s:cur_ft)
-      if match(getline(line(".")), g:cosco_ignore_ft_pattern[s:cur_ft]) != -1
-        return 1
-      endif
-    endif
-endfunction
-
-function! s:ignoreCurrentFiletype()
-    let filetypes = split(&ft, '\.')
-    if (exists("g:cosco_filetype_whitelist"))
-        for i in g:cosco_filetype_whitelist
-            if (index(filetypes, i) > -1)
-                return 0
-            endif
-        endfor
-
-        return 1
-    elseif (exists("g:cosco_filetype_blacklist"))
-        for i in g:cosco_filetype_blacklist
-            if (index(filetypes, i) > -1)
-                return 1
-            endif
-        endfor
-
-        return 0
-    endif
-
-    return 0
-endfunction
-
-" =====================
-" Filetypes extensions:
-" =====================
-
-function! s:filetypeOverrides()
-    try
-        exec 'call filetypes#'.&ft.'#parse()'
-    catch
-        " No filetypes for the current buffer filetype
-    endtry
-endfunction
-
-" ================================
-" Insertion and replace functions:
-" ================================
-
-function! cosco#removeCommaOrSemiColon()
-    if b:currentLineLastChar =~ '[,;]'
-        exec("s/[,;]\\?$//e")
-    end
-endfunction
-
-function! cosco#makeItASemiColon()
-    " Prevent unnecessary buffer change:
-    if b:currentLineLastChar == ';'
-        return
-    endif
-
-    exec("s/[,;]\\?$/;/e")
-endfunction
-
-function! cosco#makeItAComma()
-    " Prevent unnecessary buffer change:
-    if b:currentLineLastChar == ','
-        return
-    endif
-
-    exec("s/[,;]\\?$/,/e")
-endfunction
-
-" ==============
-" Main function:
-" ==============
-
-function! cosco#commaOrSemiColon()
-    " Don't run if we're in a readonly buffer:
-    if (&readonly == 1)
-        return
-    endif
-
-    " Dont run if current filetype has been disabled:
-    if (s:ignoreCurrentFiletype())
-        return
-    endif
-
-    let b:wasExtensionExecuted = 0
-
+    " --------------------------
+    " Gathering information 
+    " --------------------------
     let b:originalLineNum = line('.')
-    let b:currentLine = getline(b:originalLineNum)
+    " also remove all beginning/ending white spaces
+    let b:currentLine = cosco_helpers#Strip(getline(b:originalLineNum))
     let b:currentLineLastChar = matchstr(b:currentLine, '.$')
     let b:currentLineFirstChar = matchstr(b:currentLine, '^.')
     let b:currentLineIndentation = indent(b:originalLineNum)
 
     let b:originalCursorPosition = getpos('.')
 
-    let b:nextLine = s:getNextNonBlankLine(b:originalLineNum)
-    let b:prevLine = s:getPrevNonBlankLine(b:originalLineNum)
+    let b:nextLine = getline(nextnonblank(b:originalLineNum) + 1)
+    let b:prevLine = getline(prevnonblank(b:originalLineNum) - 1)
 
-    let b:nextLineIndentation = indent(s:getNextNonBlankLineNum(b:originalLineNum))
-    let b:prevLineIndentation = indent(s:getPrevNonBlankLineNum(b:originalLineNum))
+    let b:nextLineIndentation = indent(nextnonblank(b:originalLineNum) + 1)
+    let b:prevLineIndentation = indent(prevnonblank(b:originalLineNum) - 1)
 
     let b:prevLineLastChar = matchstr(b:prevLine, '.$')
     let b:nextLineLastChar = matchstr(b:nextLine, '.$')
-    let b:nextLineFirstChar = matchstr(s:strip(b:nextLine), '^.')
+    let b:nextLineFirstChar = matchstr(cosco_helpers#Strip(b:nextLine), '^.')
 
-    if (s:hasUnactionableLines())
-        return
+    " this variable is set after an extra file set its conditions.
+    " Possible values:
+    "   0 => Don't check further
+    "   1 => Do check further
+    let b:cosco_ret_extra_conditions = 0
+
+    " --------------
+    " Filtering 
+    " --------------
+    " does the line need a comma/semicolon?
+    if !g:cosco_enable || cosco_helpers#ShouldIgnoreLine() " is it 'worth' it to put a semicolon/comma?
+
+        " if the comma/semicolon is the last character of the line => remove it!
+        if b:currentLine[0] =~ '[,;]'
+            call cosco_setter#RemoveCommaOrSemicolon()
+            call setpos('.', b:originalCursorPosition)
+        endif
+
+        return 1
     endif
-
-    call s:filetypeOverrides()
-
-    if (b:wasExtensionExecuted)
+    
+    " ---------------
+    " Overriding 
+    " ---------------
+    " apply the comma/semicolon for some special filetypes which don't
+    " suit with the general setter
+    call cosco_helpers#FiletypeOverride()
+    if b:cosco_ret_extra_conditions
         call setpos('.', b:originalCursorPosition)
-        return
+        return 0
     endif
 
+    " =================================
+    " Place/Remove comma/semicolon 
+    " =================================
+    " --------------
+    " Remove it 
+    " --------------
+
+    " -------------
+    " Place it 
+    " -------------
     if b:prevLineLastChar == ','
         if b:nextLineLastChar == ','
-            call cosco#makeItAComma()
+            call cosco_setter#MakeComma()
         elseif b:nextLineIndentation < b:currentLineIndentation
-            call cosco#makeItASemiColon()
+            call cosco_setter#MakeSemicolon()
         elseif b:nextLineIndentation == b:currentLineIndentation
-            call cosco#makeItAComma()
+            call cosco_setter#MakeComma()
         endif
-    elseif b:prevLineLastChar == ';'
-        call cosco#makeItASemiColon()
+
+    "elseif b:prevLineLastChar == ';'
+    "    call cosco_setter#MakeSemicolon()
+
     elseif b:prevLineLastChar == '{'
         if b:nextLineLastChar == ','
             " TODO idea: externalize this into a "javascript" extension:
-            if s:strip(b:nextLine) =~ '^var'
-                call cosco#makeItASemiColon()
+            if cosco_helpers#Strip(b:nextLine) =~ '^var'
+                call cosco_setter#MakeSemicolon()
             endif
-            call cosco#makeItAComma()
+            call cosco_setter#MakeComma()
         " TODO idea: externalize this into a "javascript" extension:
-        elseif s:strip(b:prevLine) =~ '^var'
+        elseif cosco_helpers#Strip(b:prevLine) =~ '^var'
             if b:nextLineFirstChar == '}'
-                call cosco#removeCommaOrSemiColon()
+                call cosco_setter#RemoveCommaOrSemicolon()
             endif
         else
-            call cosco#makeItASemiColon()
+            call cosco_setter#MakeSemicolon()
         endif
+
     elseif b:prevLineLastChar == '['
         if b:nextLineFirstChar == ']'
-            call cosco#removeCommaOrSemiColon()
+            call cosco_setter#RemoveCommaOrSemicolon()
         elseif b:currentLineLastChar =~ '[}\])]'
-            call cosco#makeItASemiColon()
+            call cosco_setter#MakeSemicolon()
         else
-            call cosco#makeItAComma()
+            call cosco_setter#MakeComma()
         endif
-    elseif b:prevLineLastChar == '('
-        if b:nextLineFirstChar == ')'
-            call cosco#removeCommaOrSemiColon()
-        else
-            call cosco#makeItAComma()
-        endif
+
     elseif b:nextLineFirstChar == ']'
-        call cosco#removeCommaOrSemiColon()
+        call cosco_setter#RemoveCommaOrSemicolon()
+
     else
-        call cosco#makeItASemiColon()
+        call cosco_setter#MakeSemicolon()
     endif
 
     call setpos('.', b:originalCursorPosition)
