@@ -19,9 +19,10 @@ endfunction
 " =============================
 " Previous line ending with `,`
 " =============================
-"
 
-    " Next line is also `,`
+    " --------------------------
+    " Next line is also ',' 
+    " --------------------------
     function! s:tc.test_prevIsComma_nextIsComma()
         put! = [
             \ 'one,',
@@ -29,23 +30,25 @@ endfunction
             \ 'three,'
         \]
 
-        normal! 2G
+        normal! 3G
 
         " Current line has no specific ending
-        call cosco#commaOrSemiColon()
+        call cosco#CommaOrSemiColon()
         call self.assert_equal('two,', getline('.'))
 
-        " Current line ends in `,` (shouldn't add an extra one)
-        call cosco#commaOrSemiColon()
+        " Previous line ends in `,` (shouldn't add an extra one)
+        call cosco#CommaOrSemiColon()
         call self.assert_equal('two,', getline('.'))
 
-        " Current line ends in `;` (should replace it with `,`)
-        normal! 0f,r;
-        call cosco#commaOrSemiColon()
+        " Previous line ends in `;` (should replace it with `,`)
+        normal! k0f,r;j
+        call cosco#CommaOrSemiColon()
         call self.assert_equal('two,', getline('.'))
     endfunction
 
-    " Next begins with }, ] or )
+    " -----------------------------------
+    " Next line beings with },] or ) 
+    " -----------------------------------
     function! s:tc.test_prevIsComma_nextIsClosingBlock()
         put! = [
             \ 'one,',
@@ -56,21 +59,23 @@ endfunction
         normal! 2G
 
         " Current line has no specific ending
-        call cosco#commaOrSemiColon()
+        call cosco#CommaOrSemiColon()
         call self.assert_equal('two', getline('.'))
 
         " Current line ends in `,`
         normal! A,
-        call cosco#commaOrSemiColon()
+        call cosco#CommaOrSemiColon()
         call self.assert_equal('two', getline('.'))
 
         " Current line ends in `;`
         normal! A;
-        call cosco#commaOrSemiColon()
+        call cosco#CommaOrSemiColon()
         call self.assert_equal('two', getline('.'))
     endfunction
 
-    " Next line is less indent:
+    " ------------------------------
+    " Next line has less indent 
+    " ------------------------------
     function! s:tc.test_prevIsComma_nextIsLessIndented()
         put! = [
             \ '    one,',
@@ -81,20 +86,22 @@ endfunction
         normal! 2G
 
         " Current line has no specific ending
-        call cosco#commaOrSemiColon()
+        call cosco#CommaOrSemiColon()
         call self.assert_equal('    two;', getline('.'))
 
         " Current line ends in `,`
         normal! f;r,
-        call cosco#commaOrSemiColon()
+        call cosco#CommaOrSemiColon()
         call self.assert_equal('    two;', getline('.'))
 
         " Current line ends in `;`
-        call cosco#commaOrSemiColon()
+        call cosco#CommaOrSemiColon()
         call self.assert_equal('    two;', getline('.'))
     endfunction
 
-    " Next line is same indentation:
+    " -----------------------------------
+    " Next line has same indentation 
+    " -----------------------------------
     function! s:tc.test_prevIsComma_nextIsSameIndentation()
         put! = [
             \ '    one,',
@@ -105,16 +112,16 @@ endfunction
         normal! 2G
 
         " Current line has no specific ending
-        call cosco#commaOrSemiColon()
+        call cosco#CommaOrSemiColon()
         call self.assert_equal('    two,', getline('.'))
 
         " Current line ends in `,`
-        call cosco#commaOrSemiColon()
+        call cosco#CommaOrSemiColon()
         call self.assert_equal('    two,', getline('.'))
 
         " Current line ends in `;`
         normal! f,r;
-        call cosco#commaOrSemiColon()
+        call cosco#CommaOrSemiColon()
         call self.assert_equal('    two,', getline('.'))
     endfunction
 
@@ -122,8 +129,10 @@ endfunction
 " =============================
 " Previous line ending with `;`
 " =============================
-"
-    " Next line is also `;`
+
+    " ---------------------------
+    " Next line has also ';' 
+    " ---------------------------
     function! s:tc.test_prevSC_nextSC()
             put! = [
                 \ 'one;',
@@ -134,17 +143,17 @@ endfunction
             normal! 2G
 
             " Current line has no specific ending
-            call cosco#commaOrSemiColon()
+            call cosco#CommaOrSemiColon()
             call self.assert_equal('two;', getline('.'))
 
             " Current line ends in `,`
             normal! f;r,
-            call cosco#commaOrSemiColon()
+            call cosco#CommaOrSemiColon()
             call self.assert_equal('two;', getline('.'))
 
             " Current line ends in `;`
             normal! f,r;
-            call cosco#commaOrSemiColon()
+            call cosco#CommaOrSemiColon()
             call self.assert_equal('two;', getline('.'))
     endfunction
 
@@ -152,7 +161,6 @@ endfunction
 " =============================
 " Previous line ending with `{`
 " =============================
-"
 
     " Next line is `,`
     function! s:tc.test_prevIsLeftCurlyBrace_nextIsComma()
@@ -215,6 +223,6 @@ endfunction
         normal! gg
 
         " Current line has no specific ending
-        call cosco#commaOrSemiColon()
+        call cosco#CommaOrSemiColon()
         call self.assert_equal('function nextLineBrace()', getline('.'))
     endfunction

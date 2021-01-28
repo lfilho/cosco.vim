@@ -25,7 +25,12 @@
 " When is it mainly called?
 "   In general it should be *only* called in the cosco#CommaOrSemiColon() function
 "   when we check first if we can skip the previous line.
-function! cosco_helpers#ExtraConditions(cur_line, prev_line, next_line)
+"
+" Arguments:
+"   cln = *C*urrent *L*ine *N*umber
+"   pln = *P*revious *L*ine *N*umber
+"   nln = *N*ext *L*ine *N*umber
+function! cosco_helpers#ExtraConditions(cln, pln, nln)
     
     " ------
     " C 
@@ -35,7 +40,23 @@ function! cosco_helpers#ExtraConditions(cur_line, prev_line, next_line)
         " skip macros, since they don't need a semicolon here
         " Example:
         "   #define PLUGIN ("cosco")
-        if stridx(a:prev_line, '#') == 0
+        if stridx(getline(a:cln), '#') == 0
+            return 1
+        endif
+
+    " ---------
+    " Rust 
+    " ---------
+    elseif &ft =~ 'rust'
+
+        " When writing code in docstrings with markdown stuff like this:
+        " /// ```
+        " /// main() |
+        " /// ```    ^
+        "         Cursor
+        "
+        " Somehow vim sees that as a 'rustFuncCall' so we need to test that as well
+        if synIDattr(synID(a:pln, strlen(getline(a:pln)) / 2, 1), 'name') =~ '\ccall'
             return 1
         endif
     endif
@@ -102,6 +123,8 @@ function cosco_helpers#ShouldIgnoreLine(pln)
     "   /*
     "    * Big comment section
     "    */
+    echom synIDattr(synID(a:pln, strlen(getline(a:pln)) / 2, 1), 'name')
+    echom synIDattr(synID(a:pln, strlen(getline(a:pln)) / 2, 1), 'name') =~ '\ccomment'
     if g:cosco_ignore_comment_lines 
             \ && synIDattr(
             \     synID(a:pln,

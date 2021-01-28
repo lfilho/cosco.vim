@@ -81,7 +81,7 @@ function cosco#CommaOrSemiColon()
     " some filetypes needs some special "rules" since their syntax might
     " have some special formats. The following function is for each
     " filetype which goes through some extra conditions
-    if cosco_helpers#ExtraConditions(b:cl, b:pl, b:nl)
+    if cosco_helpers#ExtraConditions(b:cln, b:pln, b:nln)
         echo "b:cosco_ret_extra_conditions"
         return 0
     endif
@@ -138,17 +138,18 @@ function cosco#CommaOrSemiColon()
     "
     " Regex Pattern (in order of the conditions):
     "   - ",\s*$"   => Look, if the line above has a comma
-    "   - "^\s*)"   => Is there an open brace in the next line?           (case 2)
-    "   - ")$"      => Is a brace in the current line the last character? (case 3)
-    "   - "($"      => The previous line isn't the open brace => Make sure current line isn't the first value
+    "   - "^\s*[\}\])]"   => Is there an open brace in the next line?           (case 2)
+    "   - "[\}\])]$"      => Is a brace in the current line the last character? (case 3)
+    "   - "[(\[\{]$"      => The previous line isn't the open brace => Make sure current line isn't the first value
     if matchstr(getline(b:pln - 1), ',\s*$') != ''
-                \ || ((matchstr(b:nl, '^\s*)') != '' || matchstr(b:cl, ')$') != '') && matchstr(b:pl, '($') == '')
+                \ || ((matchstr(b:nl, '^\s*[\}\])]') != '' || matchstr(b:cl, '[\}\])]$') != '') && matchstr(b:pl, '[(\[\{]$') == '')
         call cosco_setter#MakeComma(b:pln)
 
     " add a semicolon IF there's not already one!
     elseif matchstr(b:pl, '[,;]$') == ''
         call cosco_setter#MakeSemicolon(b:pln)
         
+        echo "cosco_setter#MakeComma(b:pln)"
         " now make sure that we have the same indentation as
         " the previous line!
         call setline(b:cln, py3eval("' ' * ". indent(b:pln)))
