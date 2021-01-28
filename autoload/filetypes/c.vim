@@ -1,10 +1,10 @@
-function filetypes#c#parse()
+function filetypes#c#parse(cur_line, prev_line, next_line)
 
-    " ignore macro lines
-    if matchstr(b:currentLine, '^#') != ''
-        call cosco_setter#RemoveCommaOrSemicolon(line('.'))
+    " skip macros
+    if stridx(a:prev_line, '#') == 0
         let b:cosco_ret_extra_conditions = 1
     endif
 
-    return 0
+    let b:cosco_ret_extra_conditions = 1
+
 endfunction 
