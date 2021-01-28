@@ -31,7 +31,7 @@ if !exists("g:cosco_auto_comma_or_semicolon")
 endif
 
 " all events where cosco should set comments/semicolons automatically
-" see :h autocmd-events for more information
+" see :h autocmd-events to get all possible events
 if !exists("g:cosco_auto_comma_or_semicolon_events")
     let g:cosco_auto_comma_or_semicolon_events = ["InsertLeave"]
 endif
@@ -84,16 +84,24 @@ let g:cosco_whitelist = [
 " 2. Autocommands 
 " ====================
 
-" find out which filetypes are allowed to have the autosetter
+" set for each event in the g:cosco_auto_comma_or_semicolon_events
+" the function to add a semicolon or a comma
 augroup auto_comma_or_semicolon
     autocmd!
-    "for event in g:auto_comma_or_semicolon_events
 
-    "    " set the auto-setting only for specifique filetypes
-    "    execute "au " . event . " c call AutoCommaOrSemiColon()"
-    "endfor
     if g:cosco_auto_comma_or_semicolon >= 1
-        autocmd TextChangedI *.c call cosco#CommaOrSemiColon()
+        " all filetypes in the following string "style" (as an example):
+        "   *.c,*.cpp,*.js
+        let b:enabled_filetypes = "*." . g:cosco_whitelist[0]
+        for enabled_filetype in g:cosco_whitelist[-1:]
+            let b:enabled_filetypes = b:enabled_filetypes . ",*." . enabled_filetype
+        endfor
+
+        " set for each event and the enabled filetypes the function
+        " to add the commas/semicolons
+        for event in g:auto_comma_or_semicolon_events
+            execute "autocmd " .event. " " .b:enabled_filetypes. " call cosco#CommaOrSemiColon()"
+        endfor
     endif
 augroup END
 
