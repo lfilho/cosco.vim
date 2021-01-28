@@ -31,7 +31,10 @@ function! cosco_helpers#ExtraConditions(cur_line, prev_line, next_line)
     " C 
     " ------
     if &ft =~ 'c'
-        " skip macros
+
+        " skip macros, since they don't need a semicolon here
+        " Example:
+        "   #define PLUGIN ("cosco")
         if stridx(a:prev_line, '#') == 0
             return 1
         endif
@@ -41,13 +44,21 @@ function! cosco_helpers#ExtraConditions(cur_line, prev_line, next_line)
     return 0
 endfunction
 
+" toggle the state between when setting the commas/semicolons
+" automatically or not.
 function! cosco_helpers#AutoCommaOrSemiColonToggle()
-    if g:auto_comma_or_semicolon >= 1
-        let g:auto_comma_or_semicolon = 0
-        echo "AutoCommaOrSemiColon is OFF"
+    if g:cosco_auto_comma_or_semicolon >= 1
+        let g:cosco_auto_comma_or_semicolon = 0
+        echo "[Cosco] AutoCommaOrSemiColon is OFF"
+
+        " disable the autocommands
+        call cosco_autocmds#StopAutocmds()
     else
-        let g:auto_comma_or_semicolon = 1
-        echo "AutoCommaOrSemiColon is ON"
+        let g:cosco_auto_comma_or_semicolon = 1
+        echo "[Cosco] AutoCommaOrSemiColon is ON"
+
+        " enable the autocomds
+        call cosco_autocmds#RefreshAutocmds()
     endif
 endfunction
 

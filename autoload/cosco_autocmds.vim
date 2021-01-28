@@ -10,32 +10,46 @@
 "     commas and secmicolons.
 " =========================================================
 
+" this function is (in general) called, if the user entered a new buffer
+" (see plugin/cosco.vim => 2. Autocommands)
+"
+" It will set the autocommand for the new buffer to add automatically 
+" (if it's enabled) the commas and semicolons.
 function cosco_autocmds#RefreshAutocmds()
-  " set for each event in the g:cosco_auto_comma_or_semicolon_events
-  " the function to add a semicolon or a comma
-  augroup auto_comma_or_semicolon
-      autocmd!
-  
-      if g:cosco_auto_comma_or_semicolon >= 1
-  
-          " 0 => Current filetype is not in the whitelist
-          " 1 => Current filetype is in the whitelist
-          let b:ft_is_in_whitelist = 0
-  
-          " look if the current filetype is in the whitelist
-          for b:enabled_ft in g:cosco_whitelist
-              if b:enabled_ft == &ft
-                  let b:ft_is_in_whitelist = 1
-                  break
-              endif
-          endfor
-  
-          if b:ft_is_in_whitelist
-              " enable for each event the auto comma/semicolon placer
-              for event in g:cosco_auto_comma_or_semicolon_events
-                  execute "autocmd " .event. " <buffer> call cosco#CommaOrSemiColon()"
-              endfor
-          endif
-      endif
-  augroup END
+
+    " make sure first of all, that the user wants this feature
+    if g:cosco_auto_comma_or_semicolon >= 1
+
+        " set for each event in the g:cosco_auto_comma_or_semicolon_events
+        augroup cosco_auto_comma_semicolon
+            autocmd!
+        
+            " 0 => Current filetype is not in the whitelist
+            " 1 => Current filetype is in the whitelist
+            let b:ft_is_in_whitelist = 0
+        
+            " look if the current filetype is in the whitelist
+            for b:enabled_ft in g:cosco_whitelist
+                if b:enabled_ft == &ft
+                    let b:ft_is_in_whitelist = 1
+                    break
+                endif
+            endfor
+        
+            " enable for each event the auto comma/semicolon placer
+            if b:ft_is_in_whitelist
+                for event in g:cosco_auto_comma_or_semicolon_events
+                    execute "autocmd " .event. " <buffer> call cosco#CommaOrSemiColon()"
+                endfor
+            endif
+        augroup END
+    endif
+endfunction
+
+" This will stop all autocmds to add the commas
+" and semicolons automatically
+function cosco_autocmds#StopAutocmds()
+    augroup cosco_auto_comma_semicolon
+        autocmd!
+    augroup END
 endfunction

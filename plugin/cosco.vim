@@ -33,7 +33,7 @@ endif
 " all events where cosco should set comments/semicolons automatically
 " see :h autocmd-events to get all possible events
 if !exists("g:cosco_auto_comma_or_semicolon_events")
-    let g:cosco_auto_comma_or_semicolon_events = ["InsertLeave"]
+    let g:cosco_auto_comma_or_semicolon_events = ["TextChangedI"]
 endif
 
 " should cosco add semicolons/commas in comments as well?
@@ -81,7 +81,7 @@ autocmd BufEnter * call cosco_autocmds#RefreshAutocmds()
 " 3.1 Commandline commands 
 " -------------------------
 command! CommaOrSemiColon call cosco#commaOrSemiColon()
-command! AutoCommaOrSemiColonToggle :call cosco_helpers#AutoCommaOrSemiColonToggle()
+command! CoscoToggleAutoSetter :call cosco_helpers#AutoCommaOrSemiColonToggle()
 
 " --------------------
 " 3.2 <Plug> Commands 
