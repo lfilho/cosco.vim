@@ -45,7 +45,7 @@ if !exists("g:cosco_ignore_comment_lines")
 endif
 
 " which filetypes should be added?
-if !exists("g:cusco_whitelist")
+if !exists("g:cosco_whitelist")
     let g:cosco_whitelist = [
         \ "c",
         \ "cpp",
