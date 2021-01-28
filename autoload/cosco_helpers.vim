@@ -48,18 +48,23 @@ function cosco_helpers#ShouldIgnoreLine()
         return 1
     endif
 
-    " Ignores lines if the next one starts with a "{(["
-    if b:prevLineLastChar =~ '[\{\[(]' 
-                \ && b:nextLineFirstChar =~ '[\}\])]'
-                \ && b:nextLineLastChar =~ '[;]'
-        call setpos('.', [bufnr(), line('.') + 1, col('.'), 0])
-        call cosco_setter#RemoveCommaOrSemicolon()
-        call setpos('.', b:originalCursorPosition)
+    " Remove the last semicolon if the user creates a new function like this:
+    " void test() {
+    "   |   <-- cursorposition
+    " }; <-- Remove this semicolon
+    if b:nextLineFirstChar =~ '[\}\])]'
+        call cosco_setter#RemoveCommaOrSemicolon(line('.') + 1)
         return 1
     endif
     
     " look if it the content of the line is at least <amount> characters
-    if strlen(b:currentLine) < 4
+    " Exception like this one is allowed:
+    "   while (a < b)
+    "       ;
+    "       ^
+    "   this is allowed
+    if strlen(b:currentLine) < 2 
+                \ && matchstr(getline(line('.') - 1), '.*(.*).*[^\{]') == ''
         return 1
     endif
 
