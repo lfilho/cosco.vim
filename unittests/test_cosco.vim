@@ -62,11 +62,6 @@ endfunction
         call cosco#CommaOrSemiColon()
         call self.assert_equal('two', getline('.'))
 
-        " Current line ends in `,`
-        normal! A,
-        call cosco#CommaOrSemiColon()
-        call self.assert_equal('two', getline('.'))
-
         " Current line ends in `;`
         normal! A;
         call cosco#CommaOrSemiColon()
