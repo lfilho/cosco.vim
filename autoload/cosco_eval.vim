@@ -1,7 +1,8 @@
 " =========================================================
 " Filename: cosco_eval.vim
-" Author: TornaxO7
-" Last changes: 29.01.21
+" Author(s) - (date of last changes): 
+"   TornaxO7  - 29.01.2021
+"   Luiz Gonzaga dos Santos Filho - 07.08.2018
 " Version: 1.0
 " Usage: 
 "     Here are the functions which goes through some
@@ -27,6 +28,7 @@
 " All functions:
 "   1. cosco_eval#Decide()
 "   2. cosco_eval#Specials()
+"   3. cosco_eval#Manual()
 " =========================================================
 
 " ===========================
@@ -64,8 +66,8 @@ function cosco_eval#Decide()
         endif
         return 3
 
-    " when writing an if/while/for statement, don't add a semicolon!
-    elseif matchstr(b:pls, '^\(if\)\|\(while\)\|\(for\)') != ''
+    " when writing an if/else/while/for statement, don't add a semicolon!
+    elseif matchstr(b:pls, '^\(if\)\|\(else\)\|\(while\)\|\(for\)') != ''
         if g:cosco_debug
             echom "[Round brackets] if condition"
         endif
@@ -220,7 +222,7 @@ function cosco_eval#Decide()
     " matchstr() condition, this won't happen if there's already a comma/
     " semicolon.
     elseif (b:nls[0] == ')' || matchstr(b:cls, ')\s*{\?$') != '')
-                \ && matchstr(b:pls, '[^,;]$') == -1
+                \ && matchstr(b:pl, '[^,;]$') != ''
         if g:cosco_debug
             echom " [Round Bracket] Adding comma"
         endif
@@ -296,7 +298,95 @@ function cosco_eval#Specials()
         if b:pls[0] == '#'
             return 0
         endif
+
+    " ---------------
+    " Javascript 
+    " ---------------
+    elseif &ft == 'javascript'
+        " TODO: Add special cases if founded one!
     endif
 
     return -1
+endfunction
+
+" ===========================
+" 3. cosco_eval#Manual() 
+" ===========================
+" Usage:
+"   This function is preferred, if you wanna call cosco
+"   manually, because the autosetter messes up! This works
+"   pretty well for javascript and will be ported probably into the
+"   cosco_eval#Specials() function as well into the cosco_eval#Decide()
+"   function. This function doesn't has any return values since
+"   it already changes the lines.
+function cosco_eval#Manual()
+    
+    " ==========================
+    " Gathering information 
+    " ==========================
+    " (pasted from the cosco_eval#Decide() function)
+
+    " current line
+    let b:cln = line('.')                         " cln = *C*urrent *L*ine *N*um
+    let b:cl  = getline(b:cln)                    " cl  = *C*urrent *L*ine
+    let b:cls = cosco_helpers#Strip(b:cl)         " cls = *C*urrent *L*ine *S*tripped
+
+    " next line
+    let b:nln = nextnonblank(b:cln + 1)           " nln = *N*ext *L*ine *N*umber
+    let b:nl  = getline(nextnonblank(b:cln + 1))  " nl  = *N*ext *L*ine
+    let b:nls = cosco_helpers#Strip(b:nl)         " nls = *N*ext *L*ine *S*tripped
+    
+    " previous line
+    let b:pln = prevnonblank(b:cln - 1)           " pln = *P*revious *L*ine *N*umber
+    let b:pl  = getline(prevnonblank(b:cln - 1))  " pl  = *P*revious *L*ine
+    let b:pls = cosco_helpers#Strip(b:pl)         " pl  = *P*revious *L*ine
+
+    " ===============
+    " Evaluating 
+    " ===============
+    if b:pls[-1] == ','
+        if b:nls[-1] == ','
+            call cosco#MakeComma(b:cln)
+        elseif indent(b:nln) < indent(b:cln)
+            call cosco#MakeSemicolon(b:cln)
+        elseif indent(b:nln) == indent(b:cln)
+            call cosco#MakeComma(b:cln)
+        endif
+    elseif b:prevLineLastChar == ';'
+        call cosco#MakeSemicolon(b:cln)
+    elseif b:prevLineLastChar == '{'
+        if b:nextLineLastChar == ','
+            " TODO idea: externalize this into a "javascript" extension:
+            if s:strip(b:nextLine) =~ '^var'
+                call cosco#MakeSemicolon(b:cln)
+            endif
+            call cosco#MakeComma(b:cln)
+        " TODO idea: externalize this into a "javascript" extension:
+        elseif s:strip(b:prevLine) =~ '^var'
+            if b:nextLineFirstChar == '}'
+                call cosco#RemoveCommaOrSemicolon(b:cln)
+            endif
+        else
+            call cosco#MakeSemicolon(b:cln)
+        endif
+    elseif b:prevLineLastChar == '['
+        if b:nextLineFirstChar == ']'
+            call cosco#RemoveCommaOrSemicolon(b:cln)
+        elseif b:currentLineLastChar =~ '[}\])]'
+            call cosco#MakeSemicolon(b:cln)
+        else
+            call cosco#MakeComma(b:cln)
+        endif
+    elseif b:prevLineLastChar == '('
+        if b:nextLineFirstChar == ')'
+            call cosco#RemoveCommaOrSemicolon(b:cln)
+        else
+            call cosco#MakeComma(b:cln)
+        endif
+    elseif b:nextLineFirstChar == ']'
+        call cosco#RemoveCommaOrSemicolon(b:cln)
+    else
+        call cosco#MakeSemicolon(b:cln)
+    endif
+
 endfunction

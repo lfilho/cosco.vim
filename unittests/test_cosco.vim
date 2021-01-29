@@ -1,7 +1,8 @@
 " =========================================================
 " Filename: test_cosco.vim
-" Author: TornaxO7
-" Last changes: 29.01.21
+" Author(s) - (date of last changes): 
+"   TornaxO7  - 29.01.2021
+"   Luiz Gonzaga dos Santos Filho - 22.07.2017
 " Version: 1.0
 " Usage: 
 "     This lets cosco goes through some unittest

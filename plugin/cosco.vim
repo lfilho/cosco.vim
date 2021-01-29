@@ -1,7 +1,8 @@
 " =========================================================
 " Filename: cosco.vim
-" Author: TornaxO7
-" Last changes: 27.01.21
+" Author(s) - (date of last changes): 
+"   TornaxO7  - 29.01.2021
+"   Luiz Gonzaga dos Santos Filho - 07.08.2018
 " Version: 1.0
 " Usage: 
 "     Here are all values which are loaded first for the
@@ -86,7 +87,7 @@ autocmd BufEnter * call cosco_autocmds#RefreshAutocmds()
 " -------------------------
 " 3.1 Commandline commands 
 " -------------------------
-command! CoscoCommaOrSemiColon :call cosco#CommaOrSemiColon()
+command! CoscoCommaOrSemiColon :call cosco_eval#Manual()<CR>
 command! CoscoToggleAutoSetter :call cosco_helpers#AutoCommaOrSemiColonToggle()
 
 " --------------------
