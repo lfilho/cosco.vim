@@ -68,24 +68,24 @@ endfunction
     " -----------------------------------
     "  Test case influence (in my opinion) too much the code
     "   - TornaxO7
-    "function! s:tc.test_prevIsComma_nextIsClosingBlock()
-    "    put! = [
-    "        \ 'one,',
-    "        \ 'two',
-    "        \ '}'
-    "    \]
+    function! s:tc.test_prevIsComma_nextIsClosingBlock()
+        put! = [
+            \ 'one,',
+            \ 'two',
+            \ '}'
+        \]
 
-    "    normal! 2G
+        normal! 2G
 
-    "    " Current line has no specific ending
-    "    call cosco#CommaOrSemiColon()
-    "    call self.assert_equal('two', getline('.'))
+        " Current line has no specific ending
+        call cosco#CommaOrSemiColon()
+        call self.assert_equal('two', getline('.'))
 
-    "    " Current line ends in `;`
-    "    normal! A;
-    "    call cosco#CommaOrSemiColon()
-    "    call self.assert_equal('two', getline('.'))
-    "endfunction
+        " Current line ends in `;`
+        normal! A;
+        call cosco#CommaOrSemiColon()
+        call self.assert_equal('two', getline('.'))
+    endfunction
 
     " ------------------------------
     " Next line has less indent 

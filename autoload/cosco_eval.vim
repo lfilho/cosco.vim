@@ -297,6 +297,11 @@ function cosco_eval#Specials()
         " skip macros
         if b:pls[0] == '#'
             return 0
+
+        " skip declarations like that:
+        "   static void
+        elseif synIDattr(synID(b:pln, strlen(b:pl) - 1, 1), 'name') =~ '\ctype'
+            return 0
         endif
 
     " ---------------
