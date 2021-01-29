@@ -86,9 +86,9 @@ function cosco#CommaOrSemiColon()
         "echo "Add a semicolon"
         call cosco_setter#MakeSemicolon(b:pln)
 
-        " now make sure that we have the same indentation as
-        " the previous line since this happens, if the user
-        " uses the enter key to get to the next line
+        " now make sure that we have the same indentation as the previous line
+        " since vim will move the cursor not back to its identation (as in step
+        " 2), if the user uses the enter key to get to the next line
         " (the vertical line should represent the cursor)
         "   Step 1:
         "     short a|
@@ -105,6 +105,7 @@ function cosco#CommaOrSemiColon()
         "     short a;
         "     |
         " Step 4 does this setline here.
+        "
         call setline(b:cln, py3eval("' ' * ". indent(b:pln)))
 
     elseif b:cosco_ret_value == 3

@@ -126,7 +126,11 @@ function cosco_eval#Decide()
     "     int main() {
     "
     elseif matchstr(b:pls, '{$') != ''
-        echom "[Curly Bracket]"
+        echom "[Curly Bracket] Opened"
+        return 0
+
+    elseif stridx(b:pls, '}') != -1
+        echom "[Curly Bracket] Closed"
         return 0
 
     " --------------------------
