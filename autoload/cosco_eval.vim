@@ -52,6 +52,19 @@ function cosco_eval#Decide()
         echom "First line"
         return 0
 
+    " ------------------------------------
+    " 2. Specifique code instructions 
+    " ------------------------------------
+    " when writing a multiline condition, remove the settet semicolon/comma
+    elseif matchstr(b:cls, '^[\(&&\)\(||\)]') != '' || matchstr(b:pls, '[\(&&\)\(||\)]$') != ''
+        echom "[Round brackets] multiline conditions"
+        return 3
+
+    " when writing an if/while/for statement, don't add a semicolon!
+    elseif matchstr(b:pls, '^[\(if\)\(while\)\(for\)]') != ''
+        echom "[Round brackets] if condition"
+        return 0
+
     " ---------------------------------
     " 2. Already a semicolon/comma 
     " ---------------------------------
@@ -178,8 +191,15 @@ function cosco_eval#Decide()
     "     (1)               (2)
     " Regex pattern:
     "   ")\s*{\?$" => Look at the next line of the cursor in both cases!
+    "
+    " This condition is also useful for the following case:
+    "   test();
+    "   if ()
+    " Normally it would add a comma after "test();", but thanks to the last
+    " matchstr() condition, this won't happen if there's already a comma/
+    " semicolon.
     elseif (b:nls[0] == ')' || matchstr(b:cls, ')\s*{\?$') != '')
-                \ && stridx(b:pls, ',') == -1
+                \ && matchstr(b:pls, '[^,;]$') == -1
         echom " [Round Bracket] Adding comma"
         return 1
 
@@ -241,9 +261,9 @@ endfunction
 function cosco_eval#Specials()
     
     " ------
-    " C 
+    " C/C++
     " ------
-    if &ft == 'c'
+    if &ft == 'c' || &ft == 'cpp'
 
         " skip macros
         if b:pls[0] == '#'
