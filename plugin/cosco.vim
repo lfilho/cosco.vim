@@ -66,7 +66,13 @@ endif
 " Core variables 
 " -------------------
 " here are all variables which shouldn't be changed by
-" the user
+" the user. Only rather for debugging or intern usages.
+
+" enable logging while scanning the situation in the
+" cosco_eval#Decide() function.
+if !exists("g:cosco_debug")
+    let g:cosco_debug = 0
+endif
 
 " ====================
 " 2. Autocommands 
@@ -80,12 +86,12 @@ autocmd BufEnter * call cosco_autocmds#RefreshAutocmds()
 " -------------------------
 " 3.1 Commandline commands 
 " -------------------------
-command! CommaOrSemiColon call cosco#commaOrSemiColon()
+command! CoscoCommaOrSemiColon :call cosco#CommaOrSemiColon()
 command! CoscoToggleAutoSetter :call cosco_helpers#AutoCommaOrSemiColonToggle()
 
 " --------------------
 " 3.2 <Plug> Commands 
 " --------------------
 nnoremap <silent> <nowait> <Plug>(cosco-commaOrSemiColon)
-    \ :<C-u>silent! call cosco#commaOrSemiColon()<Bar>
+    \ :<C-u>silent! call cosco#CommaOrSemiColon()<Bar>
     \ silent! call repeat#set("\<Plug>(cosco-commaOrSemiColon)")<CR>

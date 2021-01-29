@@ -1,0 +1,136 @@
+cosco.txt   Auto-Semicolon-and-Comma placer.
+cosco
+
+                            __________  _____ __________ 
+                           / ____/ __ \/ ___// ____/ __ \
+                          / /   / / / /\__ \/ /   / / / /
+                         / /___/ /_/ /___/ / /___/ /_/ / 
+                         \____/\____//____/\____/\____/  
+
+================================================================================
+CONTENTS                                                        *cosco-contents*
+
+    01. Intro .................................................... |cosco-intro|
+    02. Configuration .................................... |cosco-configuration|
+    03. Commands .............................................. |cosco-commands|
+      03.1  Commandline commands .................. |cosco-commandline-commands|
+      03.2  Plug commands ................................ |cosco-plug-commands|
+    04. Contribute .......................................... |cosco-contribute|
+
+================================================================================
+1.0 INTRODUCTION                                                   *cosco-intro*
+
+cosco adds automatically comma and semicolons! A live demo can be seen in the
+README file.
+But here's an example:
+    
+                                char character|
+                                       ^
+                                     Cursor
+
+Normally we'd press the semicolon key and then return key, but thanks to cosco,
+we just need to press the return key! Cosco will add automatically a semicolon
+for us:
+
+                                char character;
+                                |
+                                ^
+                              Cursor
+
+It'll also add commas in function brackets automatically like in this one:
+                            
+                        test(
+                              int val1,
+                              int val2,
+                              char * val3|
+                            )            ^
+                                      Cursor
+
+Just hit the return key and you're fine!
+
+================================================================================
+2.0 CONFIGURATION                                          *cosco-configuration*
+
+Each configuration is shown with their default value.
+
+                                                *g:cosco_auto_comma_or_semicolon*
+* Decide if cosco should set commas and semicolons automatically
+  Possible values:
+    0 = Autoplacing disabled
+    1 = Autoplacing enabled
+>
+        let g:cosco_auto_comma_or_semicolon = 0
+<                                                
+
+                                        *g:cosco_auto_comma_or_semicolon_events*
+* Set at which events cosco should look, if it can set a comma/semicolon. 
+  See `:h autocmd-events` to get all possible autocommand-events.
+>
+        let g:cosco_auto_comma_or_semicolon_events = ["TextChangedI"]
+<
+
+                                                       *g:cosco_ignore_comments*
+* Decide if semicolons should be added in comment-sections as well.
+  Possible values:
+    0 = Don't place semicolons/commas in comment sections
+    1 = Place semicolons/commas in comment sections
+>
+        let g:cosco_ignore_comments = 1
+<                           
+
+                                                             *g:cosco_whitelist*
+* Decide for which filetypes cosco should be enabled.
+>
+        let g:cosco_whitelist = [
+            \ "c",
+            \ "cpp",
+            \ "css",
+            \ "javascript",
+            \ "rust",
+        \]
+<
+
+    Note: Please consider that the plugin is still pretty new and more C
+    oriented. If you find any issues please don't hesitate to create an issue
+    and report it to us!
+
+                                                                *g:cosco_enable*
+* Enable/Disable cosco.
+  Possible values:
+    0 = Disabled
+    1 = Enabled
+>
+        let g:cosco_enable = 1
+<
+================================================================================
+3.0 COMMANDS                                                    *cosco-commands*
+
+
+                        3.1 *cosco-commandline-commands*
+
+                                                        *:CoscoCommaOrSemiColon*
+* Call Cosco manually, so it looks, if it can add a semicolon or not.
+    
+    :CoscoCommaOrSemiColon
+
+                                                        *:CoscoToggleAutoSetter*
+* Toggle Cosco, so if you find a bug for example, you can toggle cosco
+  temporary.
+
+    :CoscoToggleAutoSetter
+
+                           3.2 *cosco-plug-commands*
+
+  Here's a <Plug> command which is binded to the `:CoscoCommaOrSemiColon`
+  command:
+    
+    <Plug>(cosco-commaOrSemiColon)
+
+================================================================================
+4.0 CONTRIBUTE                                                *cosco-contribute*
+
+  Thank you that you want to contribute to this plugin!
+  All you need to do, is reading the CONTRIBUTE.md in the github repository.
+  Everything is there what you'll need.
+
+                                               vim:tw=80:ts=8:ft=help:norl:nofen

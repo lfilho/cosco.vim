@@ -49,7 +49,7 @@ function cosco#CommaOrSemiColon()
     " current line
     let b:cln = line('.')                         " cln = *C*urrent *L*ine *N*um
     let b:cl  = getline(b:cln)                    " cl  = *C*urrent *L*ine
-    let b:cls = cosco_helpers#Strip(b:cl)        " cls = *C*urrent *L*ine *S*tripped
+    let b:cls = cosco_helpers#Strip(b:cl)         " cls = *C*urrent *L*ine *S*tripped
 
     " next line
     let b:nln = nextnonblank(b:cln + 1)           " nln = *N*ext *L*ine *N*umber
@@ -106,7 +106,9 @@ function cosco#CommaOrSemiColon()
         "     |
         " Step 4 does this setline here.
         "
-        call setline(b:cln, py3eval("' ' * ". indent(b:pln)))
+        if b:cls == ''
+            call setline(b:cln, py3eval("' ' * ". indent(b:pln)))
+        endif
 
     elseif b:cosco_ret_value == 3
         call cosco_setter#RemoveCommaOrSemicolon(b:pln)

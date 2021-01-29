@@ -49,7 +49,9 @@ function cosco_eval#Decide()
     " ------------------
     " skip, if the file is empty currently...
     if b:pln == 0
-        echom "First line"
+        if g:cosco_debug
+            echom "First line"
+        endif
         return 0
 
     " ------------------------------------
@@ -57,12 +59,16 @@ function cosco_eval#Decide()
     " ------------------------------------
     " when writing a multiline condition, remove the settet semicolon/comma
     elseif matchstr(b:cls, '^\(&&\)\|\(||\)') != '' || matchstr(b:pls, '\(&&\)\|\(||\)$') != ''
-        echom "[Round brackets] multiline conditions"
+        if g:cosco_debug
+            echom "[Round brackets] multiline conditions"
+        endif
         return 3
 
     " when writing an if/while/for statement, don't add a semicolon!
-    elseif matchstr(b:pls, '^[\(if\)\(while\)\(for\)]') != ''
-        echom "[Round brackets] if condition"
+    elseif matchstr(b:pls, '^\(if\)\|\(while\)\|\(for\)') != ''
+        if g:cosco_debug
+            echom "[Round brackets] if condition"
+        endif
         return 0
 
     " ---------------------------------
@@ -106,7 +112,9 @@ function cosco_eval#Decide()
     "       );
     "   We need here this semicolon!
     elseif matchstr(b:pls, '[^)][,;]$') != ''
-        echom "Already has semicolon"
+        if g:cosco_debug
+            echom "Already has semicolon"
+        endif
         return 0
 
     " ----------------
@@ -128,7 +136,9 @@ function cosco_eval#Decide()
     " would be the last slash in the last line.
     elseif g:cosco_ignore_comment_lines &&
                 \ synIDattr(synID(b:pln, indent(b:pln) + 1, 1), 'name') =~ '\ccomment'
-        echom "[Comment] Is in comment"
+        if g:cosco_debug
+            echom "[Comment] Is in comment"
+        endif
         return 0
 
     " -------------------------
@@ -139,11 +149,15 @@ function cosco_eval#Decide()
     "     int main() {
     "
     elseif matchstr(b:pls, '{$') != ''
-        echom "[Curly Bracket] Opened"
+        if g:cosco_debug
+            echom "[Curly Bracket] Opened"
+        endif
         return 0
 
     elseif stridx(b:pls, '}') != -1
-        echom "[Curly Bracket] Closed"
+        if g:cosco_debug
+            echom "[Curly Bracket] Closed"
+        endif
         return 0
 
     " --------------------------
@@ -159,12 +173,17 @@ function cosco_eval#Decide()
     "   ] ^
     "   Cursor
     elseif matchstr(b:pls, '\[$') != ''
-        echom "[Square bracket] opened"
+        if g:cosco_debug
+            echom "[Square bracket] opened"
+        endif
         return 0
 
+    " Here's it's the same as in the
     elseif (b:nls[0] == ']' || matchstr(b:cls, ']\s*$') != '')
                 \ && stridx(b:pls, ',') == -1
-        echom "[Square bracket] Adding comma"
+        if g:cosco_debug
+            echom "[Square bracket] Adding comma"
+        endif
         return 1
 
     " -------------------------
@@ -178,7 +197,9 @@ function cosco_eval#Decide()
     "      ^        )   ^
     "     Cursor      Cursor
     elseif matchstr(b:pls, '(\s*$') != ''
-        echom "Round brackets"
+        if g:cosco_debug
+            echom "Round brackets"
+        endif
         return 0
 
     " Add a comma, if the user is adding elements in a tuple or
@@ -200,7 +221,9 @@ function cosco_eval#Decide()
     " semicolon.
     elseif (b:nls[0] == ')' || matchstr(b:cls, ')\s*{\?$') != '')
                 \ && matchstr(b:pls, '[^,;]$') == -1
-        echom " [Round Bracket] Adding comma"
+        if g:cosco_debug
+            echom " [Round Bracket] Adding comma"
+        endif
         return 1
 
     " This condition is for the exception case, described in "2. Already
@@ -227,11 +250,15 @@ function cosco_eval#Decide()
     elseif matchstr(b:pls, ');$') != ''
 
         if stridx(b:cls, '{') != -1
-            echom "Removing comma"
+            if g:cosco_debug
+                echom "Removing comma"
+            endif
             return 3
 
         elseif indent(b:cln) <= indent(b:pln)
-            echom "Indentation"
+            if g:cosco_debug
+                echom "Indentation"
+            endif
             return 0
         endif
 

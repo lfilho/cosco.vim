@@ -27,9 +27,6 @@ function! cosco_helpers#AutoCommaOrSemiColonToggle()
     endif
 endfunction
 
-" =========
-" Rest 
-" =========
 " --------------------
 " Strip functions 
 " --------------------
@@ -50,7 +47,7 @@ function! cosco_helpers#StripLeft(string)
     return substitute(a:string, '^\s*', '', 'e')
 endfunction
 
-" Remove all ending space characters, as well comment lines.
+" Remove all ending space characters and as well comment lines.
 " Example:
 "   "int rofl;     // useless comment, LOL" => "int rofl;"
 function! cosco_helpers#StripRight(string)
