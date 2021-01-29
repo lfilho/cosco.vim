@@ -56,7 +56,7 @@ function cosco_eval#Decide()
     " 2. Specifique code instructions 
     " ------------------------------------
     " when writing a multiline condition, remove the settet semicolon/comma
-    elseif matchstr(b:cls, '^[\(&&\)\(||\)]') != '' || matchstr(b:pls, '[\(&&\)\(||\)]$') != ''
+    elseif matchstr(b:cls, '^\(&&\)\|\(||\)') != '' || matchstr(b:pls, '\(&&\)\|\(||\)$') != ''
         echom "[Round brackets] multiline conditions"
         return 3
 
