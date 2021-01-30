@@ -10,7 +10,7 @@
 
 Thank you for considering to contribute to this project!
 This README should help you to understand the structure of this project and what
-you have be aware of when contributing.
+you have to be aware of when contributing to this project!
 
 # Table of contents
 
@@ -159,10 +159,16 @@ plugin. You can take a look into it what it has but they aren't that important.
 
 ## cosco_setter.vim
 
-This file contains three functions, which manipulate the text inside vim. Each
+This file contains four functions, which manipulate the text inside vim. Each
 of them takes one argument: The line number which has to be changed. In general
 it's the line number of the previous line, since our cursor is mostly already
 one line below.
+
+So the four functions are:
+- `cosco_setter#MakeSemicolon` => Add a semicolon (`;`)
+- `cosco_setter#MakeComma` => Add a comma (`,`)
+- `cosco_setter#MakeDoublePoints` => Add a pair of points (`:`)
+- `cosco_setter#RemoveCommaOrSemicolon` => Remove the comma or the semicolon
 
 ## cosco.vim
 
@@ -173,7 +179,7 @@ This function does the following:
 2. Look, if the `cosco_eval#Specials()` function can provide a decision. If yes,
    move on to the 4. point. If not, go on to 3.
 3. Go through the general conditions which are mostly in a code.
-4. Now add a comma/semicolon, remove it or skip the previous line.
+4. Now add a comma/semicolon/double point, remove it or skip the previous line.
 
 For more information, take a look into the file.
 
@@ -201,3 +207,7 @@ which will print under your statusbar a little string like in the GIF above:
 [Curly Bracket] Opened
 ```
 This could help you while debugging stuff.
+
+## Last words
+Hopefully you've got a overall understanding of this plugin now! If you have
+some questions, just open an issue and we'll try to help you!
