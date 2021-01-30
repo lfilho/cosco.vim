@@ -122,11 +122,11 @@ function cosco_eval#Decide()
     "       var2
     "       );
     "   We need here this semicolon!
-    elseif matchstr(b:pls, '[^)][,;]$') != ''
-        if g:cosco_debug
-            echom "Already a comma/semicolon"
-        endif
-        return 0
+    "elseif matchstr(b:pls, '[^)][,;]$') != ''
+    "    if g:cosco_debug
+    "        echom "Already a comma/semicolon"
+    "    endif
+    "    return 0
 
     " ----------------
     " 2. Comments 
@@ -284,7 +284,10 @@ function cosco_eval#Decide()
             return 0
         endif
 
+    elseif matchstr(b:pls, '[,;]$') != ''
+        return 0
     endif
+
 
     " if none cases hit, add a semicolon
     return 2
