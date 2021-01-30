@@ -12,16 +12,16 @@
 
 " toggle the state between when setting the commas/semicolons
 " automatically or not.
-function! cosco_helpers#AutoCommaOrSemiColonToggle()
-    if g:cosco_auto_comma_or_semicolon >= 1
-        let g:cosco_auto_comma_or_semicolon = 0
-        echo "[Cosco] AutoCommaOrSemiColon is OFF"
+function! cosco_helpers#AutoSetterToggle()
+    if g:cosco_auto_setter >= 1
+        let g:cosco_auto_setter = 0
+        echo "[Cosco] AutoAdapatCode is OFF"
 
         " disable the autocommands
         call cosco_autocmds#StopAutocmds()
     else
-        let g:cosco_auto_comma_or_semicolon = 1
-        echo "[Cosco] AutoCommaOrSemiColon is ON"
+        let g:cosco_auto_setter = 1
+        echo "[Cosco] AutoAdaptCode is ON"
 
         " enable the autocomds
         call cosco_autocmds#RefreshAutocmds()

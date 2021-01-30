@@ -36,7 +36,7 @@ endif
 " Return values:
 "   0 => Added comma/semicolon; Everything worked fine
 "   1 => Didn't add a comma/semicolon; (Probably) Something went wrong
-function cosco#CommaOrSemiColon()
+function cosco#AdaptCode()
 
     " stop immediately if cosco is not enabled
     if !g:cosco_enable
@@ -76,16 +76,31 @@ function cosco#CommaOrSemiColon()
     " if the special cases couldn't find anything
     " => Go through the general conditions
     if b:cosco_ret_value == -1
-        let b:cosco_ret_value = cosco_eval#Decide()
+
+        if cosco_eval#ShouldNotSkip()
+
+            " b:cosco_ret_value has to be set from this function
+            " since we don't now yet, what we have to add
+            let b:cosco_ret_value = cosco_eval#ShouldAdd()
+                
+        elseif cosco_eval#ShouldRemove()
+            call cosco_setter#RemoveEndCharacter(b:pln)
+        endif
     endif
 
+    " ------------------------------
+    " Add the symbol (if given) 
+    " ------------------------------
     if b:cosco_ret_value == 1
         "echo "Add a comma"
-        call cosco_setter#MakeComma(b:pln)
+        call cosco_setter#AddComma(b:pln)
 
     elseif b:cosco_ret_value == 2
+        call cosco_setter#AddDoublePoints(b:pln)
+
+    elseif b:cosco_ret_value == 3
         "echo "Add a semicolon"
-        call cosco_setter#MakeSemicolon(b:pln)
+        call cosco_setter#AddSemicolon(b:pln)
 
         " now make sure that we have the same indentation as the previous line
         " since vim will move the cursor not back to its identation (as in step
@@ -110,12 +125,6 @@ function cosco#CommaOrSemiColon()
         if b:cls == ''
             call setline(b:cln, py3eval("' ' * ". indent(b:pln)))
         endif
-
-    elseif b:cosco_ret_value == 3
-        call cosco_setter#MakeDoublePoints(b:pln)
-
-    elseif b:cosco_ret_value == 4
-        call cosco_setter#RemoveCommaOrSemicolon(b:pln)
     endif
 
     return 0

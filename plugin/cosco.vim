@@ -27,14 +27,14 @@
 " Possible Vales:
 "   0 => Don't set commas/semicolons automatically
 "   1 => Set commas/semicolons automatically
-if !exists("g:cosco_auto_comma_or_semicolon")
-    let g:cosco_auto_comma_or_semicolon = 0
+if !exists("g:cosco_auto_setter")
+    let g:cosco_auto_setter = 0
 endif
 
 " all events where cosco should set comments/semicolons automatically
 " see :h autocmd-events to get all possible events
-if !exists("g:cosco_auto_comma_or_semicolon_events")
-    let g:cosco_auto_comma_or_semicolon_events = ["TextChangedI"]
+if !exists("g:cosco_auto_setter_events")
+    let g:cosco_auto_setter_events = ["TextChangedI"]
 endif
 
 " should cosco add semicolons/commas in comments as well?
@@ -79,7 +79,7 @@ endif
 " 2. Autocommands 
 " ====================
 " make sure first of all, that the user wants the autosetting
-if g:cosco_auto_comma_or_semicolon >= 1
+if g:cosco_auto_setter >= 1
     " refresh the autocommands if the user moves to another buffer
     autocmd BufEnter * call cosco_autocmds#RefreshAutocmds()
 endif
@@ -90,12 +90,12 @@ endif
 " -------------------------
 " 3.1 Commandline commands 
 " -------------------------
-command! CoscoCommaOrSemiColon :call cosco_eval#Manual()<CR>
-command! CoscoToggleAutoSetter :call cosco_helpers#AutoCommaOrSemiColonToggle()
+command! CoscoAdaptCode :call cosco_eval#Manual()<CR>
+command! CoscoToggleAutoSetter :call cosco_helpers#AutoSetterToggle()
 
 " --------------------
 " 3.2 <Plug> Commands 
 " --------------------
-nnoremap <silent> <nowait> <Plug>(cosco-commaOrSemiColon)
-    \ :<C-u>silent! call cosco#CommaOrSemiColon()<Bar>
-    \ silent! call repeat#set("\<Plug>(cosco-commaOrSemiColon)")<CR>
+nnoremap <silent> <nowait> <Plug>(cosco-AdaptCode)
+    \ :<C-u>silent! call cosco#AdaptCode()<Bar>
+    \ silent! call repeat#set("\<Plug>(cosco-AdaptCode)")<CR>

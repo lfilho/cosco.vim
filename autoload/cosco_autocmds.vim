@@ -36,8 +36,8 @@ function cosco_autocmds#RefreshAutocmds()
     
         " enable for each event the auto comma/semicolon placer
         if b:ft_is_in_whitelist
-            for event in g:cosco_auto_comma_or_semicolon_events
-                execute "autocmd " .event. " <buffer> call cosco#CommaOrSemiColon()"
+            for event in g:cosco_auto_setter_events
+                execute "autocmd " .event. " <buffer> call cosco#AdaptCode()"
             endfor
         endif
     augroup END

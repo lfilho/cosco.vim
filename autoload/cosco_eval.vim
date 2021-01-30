@@ -10,47 +10,37 @@
 "     if a semicolon/comma should be added, removed or not
 "     even placed.
 "
-"     Each buffer variable (like b:pln) are declared and
+"     Each buffer variable (b:pls, b:nls, ...) are declared and
 "     initialised in the autoload/cosco.vim main function.
 "     If you want to know what they represent, go to the
 "     'Gathering information' section of the autoload/cosco.vim
 "     file.
 "
-"     The order of the conditions should be as followed:
-"       - Very easy and clear situations should come up first
-"         like writing an if condition or a for loop
-"       - After that, add the more "complicated" moments,
-"         like creating a multiline-argument in a function
-"       - And then the more simpler cases, like controlling
-"         if there's already a semicolon/comma/double point
-"         in the previous line.
-"
-"     Currently this is the order:
-"       1. No content
-"       2. Comments
 "
 " All functions:
-"   1. cosco_eval#Decide()
-"   2. cosco_eval#Specials()
-"   3. cosco_eval#Manual()
+"   1. cosco_eval#ShouldNotSkip()
+"   2. cosco_eval#ShouldAdd()
+"   3. cosco_eval#ShouldRemove()
+"   4. cosco_eval#Specials()
+"   5. cosoc_eval#Manual()
+"
+" Each function has a little description for more information.
 " =========================================================
 
 " ===========================
 " 1. cosco_eval#Decide()
 " ===========================
-" Used variables (all initialised in the cosco#CommaOrSemicolon() function):
-"   cln = *C*urrent *L*ine *N*umber
-"   pln = *P*revious *L*ine *N*umber
-"   nln = *N*ext *L*ine *N*umber
+" Usage:
+"   It goes through some general situation where we wouldn't add a semicolon/comma here.
 "
 " Return values:
-"   0 => Skip
-"   1 => Should add a comma       (,)
-"   2 => Should add a semicolon   (;)
-"   3 => Should add a doublepoint (:)
-"   4 => Remove semicolon/comma of previous line
-function cosco_eval#Decide()
+"   0 => No, you can skip
+"   1 => Yes, don't skip
+function cosco_eval#ShouldNotSkip()
     
+    " ==================
+    " Obvious cases 
+    " ==================
     " ------------------
     " 1. No content 
     " ------------------
@@ -64,7 +54,7 @@ function cosco_eval#Decide()
     " ------------------------------------
     " 2. Specifique code instructions 
     " ------------------------------------
-    " when writing a multiline condition, remove the settet semicolon/comma
+    " Make sure that we're not in a multiline condition.
     " Example:
     "   if (          while (well_yes &&
     "     val1 &&             but_actually_no ||
@@ -72,11 +62,11 @@ function cosco_eval#Decide()
     "   ) ^             )     ^
     "   Cursor              Cursor
     "
-    elseif matchstr(b:cls, '^\(&&\)\|\(||\)') != '' || matchstr(b:pls, '\(&&\)\|\(||\)$') != ''
+    elseif stridx(b:cls, '\(&&\)\|\(||\)') != -1 || stridx(b:pls, '\(&&\)\|\(||\)') != -1
         if g:cosco_debug
             echom "[Code] multiline conditions"
         endif
-        return 4
+        return 0
 
     " when writing an if/else/while/for statement, don't add a semicolon!
     elseif matchstr(b:pls, '^\(if\)\|\(else\)\|\(while\)\|\(for\)') != ''
@@ -85,16 +75,8 @@ function cosco_eval#Decide()
         endif
         return 0
 
-    " case/default statements have a double point
-    elseif matchstr(b:pls, '^\(case\)\|\(default\)') != ''
-        if g:cosco_debug
-            echom "[Code] case/default"
-        endif
-
-        return 3
-
     " ----------------
-    " 2. Comments 
+    " 3. Comments 
     " ----------------
     " This condition checks, if the user is currently in a comment section.
     " How does it find out?
@@ -116,9 +98,20 @@ function cosco_eval#Decide()
             echom "[Comment] Is in comment"
         endif
         return 0
+     
+    " -----------------------------------------
+    " 4. There's already a semicolon/comma 
+    " -----------------------------------------
+    " last but not least, look if there's already a semicolon/comma.
+    " If yes => Do nothing
+    elseif matchstr(b:pls, '[,;]$') != ''
+        return 0
 
+    " =======================
+    " More special cases 
+    " =======================
     " -------------------------
-    " 3. Curly Brackets {} 
+    " 5. Curly Brackets {}
     " -------------------------
     " Case:
     "   If the previous line ends with an open curly bracket like this:
@@ -154,28 +147,6 @@ function cosco_eval#Decide()
         endif
         return 0
 
-    " this elseif condition works the same as the elseif condition in the
-    " round brackets section (second one). It's used for example for a 
-    " multiline list:
-    "   list = [
-    "     val1,
-    "     val2
-    "   ]
-    "
-    " Pattern of matchstr:
-    "   - First pattern:
-    "       "\]\s*$"  => Does the current line end with an ending ']'?
-    "       "[^\[].*" => Don't let an open '[' be in the same line with
-    "                     the ending ']'!
-    "   - Second pattern:
-    "       "[^,;]$"  => Make sure that there's no comma semicolon yet
-    elseif (b:nls[0] == ']' || matchstr(b:cls, '[^\[].*\]\s*$') != '')
-                \ && matchstr(b:pls, '[^,;]$') != '' 
-        if g:cosco_debug
-            echom "[Square bracket] Adding comma"
-        endif
-        return 1
-
     " -------------------------
     " 4. Round Brackets () 
     " -------------------------
@@ -191,6 +162,49 @@ function cosco_eval#Decide()
             echom "[Round brackets] Open bracket in prev line"
         endif
         return 0
+    endif
+
+    return 1
+endfunction
+
+" ===============================
+" 2.0 cosco_eval#ShouldAdd() 
+" ===============================
+" Usage:
+"   This function tests, if it can add a semicolon/comma or a double
+"   point and returns what to add.
+"
+"   Since we're mainly using the semicolon character, we'll just need
+"   to add conditions for the comma (,) and double point character (:).
+"   That's why the function returns (if no conditions hit) 3.
+"
+" Return values:
+"   1 => Add a comma        (,)
+"   2 => Add a double point (:)
+"   3 => Add a semicolon    (;)
+"
+" The return values are oriented at the "Add the symbol (if given)" section of the cosco#CommaOrSemicolon function.
+function cosco_eval#ShouldAdd()
+
+    " this elseif condition works the same as the elseif condition in the
+    " round brackets section (second one). It's used for example for a 
+    " multiline list:
+    "
+    "       list = [
+    "         val1,
+    "         val2
+    "       ]
+    "
+    " Pattern of matchstr:
+    "   - First pattern:
+    "       "\]\s*$"  => Does the current line end with an ending ']'?
+    "       "[^\[].*" => Don't let an open '[' be in the same line with
+    "                     the ending ']'!
+    if (b:nls[0] == ']' || matchstr(b:cls, '[^\[].*\]\s*$') != '')
+        if g:cosco_debug
+            echom "[Square bracket] Adding comma"
+        endif
+        return 1
 
     " Add a comma, if the user is adding elements in a tuple or
     " arguments in a function.
@@ -210,11 +224,41 @@ function cosco_eval#Decide()
     " matchstr() condition, this won't happen if there's already a comma/
     " semicolon.
     elseif (b:nls[0] == ')' || matchstr(b:cls, ')\s*{\?$') != '')
-                \ && matchstr(b:pl, '[^,;]$') != ''
         if g:cosco_debug
             echom "[Round Bracket] Adding comma"
         endif
         return 1
+    
+    " --------------------------
+    " Switch case statement 
+    " --------------------------
+    " 'case' and 'default' need a double point in the end
+    elseif matchstr(b:pls, '^\(case\)\|\(default\)') != ''
+        if g:cosco_debug
+            echom "[Code] case/default"
+        endif
+        return 2
+    endif
+
+    return 3
+
+endfunction
+
+" ==================================
+" 3.0 cosco_eval#ShouldRemove() 
+" ==================================
+" Usage:
+"   This function looks if it should remove the comma/semicolon/double point
+"   from the previous line.
+"   In this case, it mainly happens, that it needn't remove a semicolon/comma,
+"   so just add conditions, where we have to remove a semicolon!
+"
+" Return values:
+"   0 => No, don't remove anything
+"   1 => Yes, remove the semicolon/comma/double points from the given line
+"       (general the previous line)
+"
+function cosco_eval#ShouldRemove()
 
     " If we've a semicolon after an open round bracket, than we have in general two cases:
     "
@@ -239,24 +283,18 @@ function cosco_eval#Decide()
     " Without the comma test, it wouldn't go into this elseif clause which would add a semicolon
     " after the comma of func2().
     "
-    elseif matchstr(b:pls, ')[,;]$') != '' && stridx(b:cls, '{') != -1
+    if matchstr(b:pls, ')[,;]$') != '' && stridx(b:cls, '{') != -1
         if g:cosco_debug
             echom "Removing comma"
         endif
-        return 4
-
-    " last but not least, look if there's already a semicolon/comma.
-    " If yes => Do nothing
-    elseif matchstr(b:pls, '[,;]$') != ''
-        return 0
+        return 1
     endif
 
-    " if none cases hit, add a semicolon
-    return 2
+    return 0
 endfunction
 
 " =============================
-" 2. cosco_eval#Specials() 
+" 4.0 cosco_eval#Specials() 
 " =============================
 " Usage:
 "   This functions goes through some special conditions for a
@@ -267,13 +305,13 @@ endfunction
 "   function.
 "
 " Return values:
-"  -1 => Don't know what to do
+"  -1 => Don't know what to do, go through the general conditions!
 "   0 => Skip
 "   1 => Should add a comma
 "   2 => Should add a semicolon
 "   3 => Remove semicolon/comma of previous line
 function cosco_eval#Specials()
-    
+ 
     " ------
     " C/C++
     " ------
@@ -294,21 +332,22 @@ function cosco_eval#Specials()
     " ---------------
     elseif &ft == 'javascript'
         " TODO: Add special cases if founded one!
+        return -1
     endif
 
     return -1
 endfunction
 
 " ===========================
-" 3. cosco_eval#Manual() 
+" 5.0 cosco_eval#Manual() 
 " ===========================
 " Usage:
 "   This function is preferred, if you wanna call cosco
-"   manually, because the autosetter messes up! This works
+"   manually, for example if the auto-setter messes up! This works
 "   pretty well for javascript and will be ported probably into the
 "   cosco_eval#Specials() function as well into the cosco_eval#Decide()
 "   function. This function doesn't has any return values since
-"   it already changes the lines.
+"   it already changes the lines and is called manually.
 function cosco_eval#Manual()
     
     " ==========================

@@ -55,20 +55,20 @@ Just hit the return key and you're fine!
 
 Each configuration is shown with their default value.
 
-                                                *g:cosco_auto_comma_or_semicolon*
+                                                           *g:cosco_auto_setter*
 * Decide if cosco should set commas and semicolons automatically
   Possible values:
     0 = Autoplacing disabled
     1 = Autoplacing enabled
 >
-        let g:cosco_auto_comma_or_semicolon = 0
+        let g:cosco_auto_setter = 0
 <                                                
 
-                                        *g:cosco_auto_comma_or_semicolon_events*
+                                                    *g:cosco_auto_setter_events*
 * Set at which events cosco should look, if it can set a comma/semicolon. 
   See `:h autocmd-events` to get all possible autocommand-events.
 >
-        let g:cosco_auto_comma_or_semicolon_events = ["TextChangedI"]
+        let g:cosco_auto_setter_events = ["TextChangedI"]
 <
 
                                                        *g:cosco_ignore_comments*
@@ -98,7 +98,7 @@ Each configuration is shown with their default value.
 
                                                                 *g:cosco_enable*
 * Enable/Disable cosco. This will also effect the manual setting. You won't be
-  able to use the manual command `:CoscoCommaOrSemiColon` as well.
+  able to use the manual command `:CoscoAdaptCode` as well.
   Possible values:
     0 = Disabled
     1 = Enabled
@@ -111,10 +111,10 @@ Each configuration is shown with their default value.
 
                         3.1 *cosco-commandline-commands*
 
-                                                        *:CoscoCommaOrSemiColon*
+                                                               *:CoscoAdaptCode*
 * Call Cosco manually, so it looks, if it can add a semicolon or not.
     
-    :CoscoCommaOrSemiColon
+    :CoscoAdaptCode
 
                                                         *:CoscoToggleAutoSetter*
 * Toggle Cosco, so if you find a bug for example, you can toggle cosco
@@ -124,10 +124,10 @@ Each configuration is shown with their default value.
 
                            3.2 *cosco-plug-commands*
 
-  Here's a <Plug> command which is binded to the `:CoscoCommaOrSemiColon`
+  Here's a <Plug> command which is binded to the `:CoscoAdaptCode`
   command:
     
-    <Plug>(cosco-commaOrSemiColon)
+    <Plug>(cosco-AdaptCode)
 
 ================================================================================
 4.0 CONTRIBUTE                                                *cosco-contribute*
