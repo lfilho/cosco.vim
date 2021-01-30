@@ -124,7 +124,7 @@ function cosco_eval#Decide()
     "   We need here this semicolon!
     elseif matchstr(b:pls, '[^)][,;]$') != ''
         if g:cosco_debug
-            echom "Already has semicolon"
+            echom "Already a comma/semicolon"
         endif
         return 0
 
@@ -209,7 +209,7 @@ function cosco_eval#Decide()
     "     Cursor      Cursor
     elseif matchstr(b:pls, '(\s*$') != ''
         if g:cosco_debug
-            echom "Round brackets"
+            echom "[Round brackets] Open bracket in prev line"
         endif
         return 0
 
@@ -233,7 +233,7 @@ function cosco_eval#Decide()
     elseif (b:nls[0] == ')' || matchstr(b:cls, ')\s*{\?$') != '')
                 \ && matchstr(b:pl, '[^,;]$') != ''
         if g:cosco_debug
-            echom " [Round Bracket] Adding comma"
+            echom "[Round Bracket] Adding comma"
         endif
         return 1
 
@@ -258,7 +258,18 @@ function cosco_eval#Decide()
     " it will immediately remove clear the current line everytime we type something!
     " That's why we test in the second condition, if the indentation is the same.
     " Since that would mean, that we just keep want to write code.
-    elseif matchstr(b:pls, ');$') != ''
+    "
+    " The commam in the pattern ([,;]) is for the following case:
+    "   func1(arg1,
+    "         func2(),
+    "         |
+    "       ) ^
+    "       Cursor
+    "
+    " Without the comma test, it wouldn't go into this elseif clause which would add a semicolon
+    " after the comma of func2().
+    "
+    elseif matchstr(b:pls, ')[,;]$') != ''
 
         if stridx(b:cls, '{') != -1
             if g:cosco_debug
