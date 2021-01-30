@@ -9,27 +9,18 @@
 "     a semicolon or a comma from a given line.
 " =========================================================
 function! cosco_setter#MakeSemicolon(linenum)
-    " make sure that there's not already a semicolon
-    if matchstr(getline(a:linenum), ';$') == ''
-        " add a semicolon at the end of the line
-        call setline(a:linenum, substitute(getline(a:linenum), '$', ';', 'e'))
-    endif
+    " add a semicolon at the end of the line
+    call setline(a:linenum, substitute(getline(a:linenum), '$', ';', 'e'))
 endfunction
 
 function! cosco_setter#MakeComma(linenum)
-    " make sure that there's not already a comma
-    if matchstr(getline(a:linenum), ',$') == ''
-        " add a comma at the end of the line
-        call setline(a:linenum, substitute(getline(a:linenum), '$', ',', 'e'))
-    endif
+    " add a comma at the end of the line
+    call setline(a:linenum, substitute(getline(a:linenum), '$', ',', 'e'))
 endfunction
 
 function! cosco_setter#MakeDoublePoints(linenum)
-    " make sure that there's not already a double point
-    if matchstr(getline(a:linenum), ':$') == ''
-        " add a double point at the end of the line
-        call setline(a:linenum, substitute(getline(a:linenum), '$', ':', 'e'))
-    endif
+    " add a double point at the end of the line
+    call setline(a:linenum, substitute(getline(a:linenum), '$', ':', 'e'))
 endfunction
 
 function! cosco_setter#RemoveCommaOrSemicolon(linenum)

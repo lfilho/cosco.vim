@@ -9,17 +9,21 @@
 "     conditions. Depending on the conditions it decides,
 "     if a semicolon/comma should be added, removed or not
 "     even placed.
-"     
-"     Please consider that the order of this function does
-"     influence the performance of this plugin! So the most
-"     important and common situations, where no comma/semicolon
-"     is needed should be added first!
 "
 "     Each buffer variable (like b:pln) are declared and
 "     initialised in the autoload/cosco.vim main function.
 "     If you want to know what they represent, go to the
 "     'Gathering information' section of the autoload/cosco.vim
 "     file.
+"
+"     The order of the conditions should be as followed:
+"       - Very easy and clear situations should come up first
+"         like writing an if condition or a for loop
+"       - After that, add the more "complicated" moments,
+"         like creating a multiline-argument in a function
+"       - And then the more simpler cases, like controlling
+"         if there's already a semicolon/comma/double point
+"         in the previous line.
 "
 "     Currently this is the order:
 "       1. No content
@@ -34,7 +38,7 @@
 " ===========================
 " 1. cosco_eval#Decide()
 " ===========================
-" Arguments:
+" Used variables (all initialised in the cosco#CommaOrSemicolon() function):
 "   cln = *C*urrent *L*ine *N*umber
 "   pln = *P*revious *L*ine *N*umber
 "   nln = *N*ext *L*ine *N*umber
@@ -61,6 +65,13 @@ function cosco_eval#Decide()
     " 2. Specifique code instructions 
     " ------------------------------------
     " when writing a multiline condition, remove the settet semicolon/comma
+    " Example:
+    "   if (          while (well_yes &&
+    "     val1 &&             but_actually_no ||
+    "     |                   |
+    "   ) ^             )     ^
+    "   Cursor              Cursor
+    "
     elseif matchstr(b:cls, '^\(&&\)\|\(||\)') != '' || matchstr(b:pls, '\(&&\)\|\(||\)$') != ''
         if g:cosco_debug
             echom "[Code] multiline conditions"
@@ -81,52 +92,6 @@ function cosco_eval#Decide()
         endif
 
         return 3
-
-    " ---------------------------------
-    " 2. Already a semicolon/comma 
-    " ---------------------------------
-    " Pattern:
-    "   "[,;]$" => Look if the previous line ends with a comma/semicolon.
-    "   "[^)]"  => Explained in the exception part.
-    "
-    " For example:
-    "   int rofl; // a rofl variable
-    "           ^
-    "   It looks here, if there's a semicolon
-    "
-    " This condition also looks after cases with commas:
-    "   list = (
-    "     14, // 14 is in the list
-    "   )   ^
-    "       |
-    "   Here's already a comma => Return 1
-    "
-    " Exception (the "[^)]" pattern):
-    "   If we declare a function like that:
-    "     int test(
-    "       int a
-    "       );
-    "       | 
-    "       ^
-    "     Cursor
-    "
-    "   then Cosco is gonna add a semicolon after the bracket!
-    "   This is handled in the "Round Bracket" section! It'll
-    "   remove it, but we have to skip this if condition first
-    "   otherwise we wouldn't reach the "Round Bracket" section.
-    "   We can't say that it shouldn't add a semicolon if the line
-    "   ends with a round bracket, because what happens with a
-    "   multiline function call like that?
-    "     test(
-    "       var1,
-    "       var2
-    "       );
-    "   We need here this semicolon!
-    "elseif matchstr(b:pls, '[^)][,;]$') != ''
-    "    if g:cosco_debug
-    "        echom "Already a comma/semicolon"
-    "    endif
-    "    return 0
 
     " ----------------
     " 2. Comments 
@@ -189,9 +154,23 @@ function cosco_eval#Decide()
         endif
         return 0
 
-    " Here's it's the same as in the
-    elseif (b:nls[0] == ']' || matchstr(b:cls, ']\s*$') != '')
-                \ && stridx(b:pls, ',') == -1
+    " this elseif condition works the same as the elseif condition in the
+    " round brackets section (second one). It's used for example for a 
+    " multiline list:
+    "   list = [
+    "     val1,
+    "     val2
+    "   ]
+    "
+    " Pattern of matchstr:
+    "   - First pattern:
+    "       "\]\s*$"  => Does the current line end with an ending ']'?
+    "       "[^\[].*" => Don't let an open '[' be in the same line with
+    "                     the ending ']'!
+    "   - Second pattern:
+    "       "[^,;]$"  => Make sure that there's no comma semicolon yet
+    elseif (b:nls[0] == ']' || matchstr(b:cls, '[^\[].*\]\s*$') != '')
+                \ && matchstr(b:pls, '[^,;]$') != '' 
         if g:cosco_debug
             echom "[Square bracket] Adding comma"
         endif
@@ -237,11 +216,8 @@ function cosco_eval#Decide()
         endif
         return 1
 
-    " This condition is for the exception case, described in "2. Already
-    " a semicolon/comma".
-    " It's tricky, because how can we differ between a normal function
-    " call and a creation of a function?
-    " Examples:
+    " If we've a semicolon after an open round bracket, than we have in general two cases:
+    "
     "   int test(     test(var1);
     "     int var1
     "     );
@@ -250,14 +226,8 @@ function cosco_eval#Decide()
     "
     " Both cases are gonna have a semicolon at the end, but in case (1),
     " we've to remove the semicolon if the user adds a curved bracket, except it's
-    " a declaration of a function. If it's declaration, we have to return 0 as well
-    " otherwise we wouldn't be able to to write anymore, since after adding a comma
-    " would reset our current line. If you don't really understand, what I mean here,
-    " take a look into the autoload/cosco.vim, line 108. If cosco'd add a semicolon
-    " to the previous line, where we call/declare our function,
-    " it will immediately remove clear the current line everytime we type something!
-    " That's why we test in the second condition, if the indentation is the same.
-    " Since that would mean, that we just keep want to write code.
+    " a declaration of a function. So we are lookin in our "stridx(b:cls, '{') if the
+    " user wants to write a whole function and not a declaration.
     "
     " The commam in the pattern ([,;]) is for the following case:
     "   func1(arg1,
@@ -269,25 +239,17 @@ function cosco_eval#Decide()
     " Without the comma test, it wouldn't go into this elseif clause which would add a semicolon
     " after the comma of func2().
     "
-    elseif matchstr(b:pls, ')[,;]$') != ''
-
-        if stridx(b:cls, '{') != -1
-            if g:cosco_debug
-                echom "Removing comma"
-            endif
-            return 4
-
-        elseif indent(b:cln) <= indent(b:pln)
-            if g:cosco_debug
-                echom "Indentation"
-            endif
-            return 0
+    elseif matchstr(b:pls, ')[,;]$') != '' && stridx(b:cls, '{') != -1
+        if g:cosco_debug
+            echom "Removing comma"
         endif
+        return 4
 
+    " last but not least, look if there's already a semicolon/comma.
+    " If yes => Do nothing
     elseif matchstr(b:pls, '[,;]$') != ''
         return 0
     endif
-
 
     " if none cases hit, add a semicolon
     return 2
