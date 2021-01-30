@@ -54,7 +54,7 @@ function cosco_eval#ShouldNotSkip()
     " ------------------------------------
     " 2. Specifique code instructions 
     " ------------------------------------
-    " Make sure that we're not in a multiline condition.
+    " Add sure that we're not in a multiline condition.
     " Example:
     "   if (          while (well_yes &&
     "     val1 &&             but_actually_no ||
@@ -375,47 +375,47 @@ function cosco_eval#Manual()
     " ===============
     if b:pls[-1] == ','
         if b:nls[-1] == ','
-            call cosco#MakeComma(b:cln)
+            call cosco#AddComma(b:cln)
         elseif indent(b:nln) < indent(b:cln)
-            call cosco#MakeSemicolon(b:cln)
+            call cosco#AddSemicolon(b:cln)
         elseif indent(b:nln) == indent(b:cln)
-            call cosco#MakeComma(b:cln)
+            call cosco#AddComma(b:cln)
         endif
-    elseif b:prevLineLastChar == ';'
-        call cosco#MakeSemicolon(b:cln)
-    elseif b:prevLineLastChar == '{'
-        if b:nextLineLastChar == ','
+    elseif b:pls[-1] == ';'
+        call cosco#AddSemicolon(b:cln)
+    elseif b:pls[-1] == '{'
+        if b:nls[-1] == ','
             " TODO idea: externalize this into a "javascript" extension:
-            if s:strip(b:nextLine) =~ '^var'
-                call cosco#MakeSemicolon(b:cln)
+            if cosco_helpers#Strip(b:nextLine) =~ '^var'
+                call cosco#AddSemicolon(b:cln)
             endif
-            call cosco#MakeComma(b:cln)
+            call cosco#AddComma(b:cln)
         " TODO idea: externalize this into a "javascript" extension:
-        elseif s:strip(b:prevLine) =~ '^var'
-            if b:nextLineFirstChar == '}'
-                call cosco#RemoveCommaOrSemicolon(b:cln)
+        elseif cosco_helpers#Strip(b:pls) =~ '^var'
+            if b:nls[0] == '}'
+                call cosco#RemoveEndCharacter(b:cln)
             endif
         else
-            call cosco#MakeSemicolon(b:cln)
+            call cosco#AddSemicolon(b:cln)
         endif
-    elseif b:prevLineLastChar == '['
-        if b:nextLineFirstChar == ']'
-            call cosco#RemoveCommaOrSemicolon(b:cln)
-        elseif b:currentLineLastChar =~ '[}\])]'
-            call cosco#MakeSemicolon(b:cln)
+    elseif b:pls[-1] == '['
+        if b:nls[0] == ']'
+            call cosco#RemoveEndCharacter(b:cln)
+        elseif b:cls[-1] =~ '[}\])]'
+            call cosco#AddSemicolon(b:cln)
         else
-            call cosco#MakeComma(b:cln)
+            call cosco#AddComma(b:cln)
         endif
-    elseif b:prevLineLastChar == '('
-        if b:nextLineFirstChar == ')'
-            call cosco#RemoveCommaOrSemicolon(b:cln)
+    elseif b:pls[-1] == '('
+        if b:nls[0] == ')'
+            call cosco#RemoveEndCharacter(b:cln)
         else
-            call cosco#MakeComma(b:cln)
+            call cosco#AddComma(b:cln)
         endif
-    elseif b:nextLineFirstChar == ']'
-        call cosco#RemoveCommaOrSemicolon(b:cln)
+    elseif b:nls[0] == ']'
+        call cosco#RemoveEndCharacter(b:cln)
     else
-        call cosco#MakeSemicolon(b:cln)
+        call cosco#AddSemicolon(b:cln)
     endif
 
 endfunction
