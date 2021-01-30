@@ -23,28 +23,30 @@ CONTENTS                                                        *cosco-contents*
 cosco adds automatically comma and semicolons! A live demo can be seen in the
 README file.
 But here's an example:
-    
+>
                                 char character|
                                        ^
                                      Cursor
-
+<
 Normally we'd press the semicolon key and then return key, but thanks to cosco,
 we just need to press the return key! Cosco will add automatically a semicolon
 for us:
-
+>
                                 char character;
                                 |
                                 ^
                               Cursor
-
+<
 It'll also add commas in function brackets automatically like in this one:
-                            
-                        test(
+
+>                           
+>                           test(
                               int val1,
                               int val2,
                               char * val3|
                             )            ^
                                       Cursor
+<
 
 Just hit the return key and you're fine!
 
@@ -95,7 +97,8 @@ Each configuration is shown with their default value.
     and report it to us!
 
                                                                 *g:cosco_enable*
-* Enable/Disable cosco.
+* Enable/Disable cosco. This will also effect the manual setting. You won't be
+  able to use the manual command `:CoscoCommaOrSemiColon` as well.
   Possible values:
     0 = Disabled
     1 = Enabled
@@ -115,7 +118,7 @@ Each configuration is shown with their default value.
 
                                                         *:CoscoToggleAutoSetter*
 * Toggle Cosco, so if you find a bug for example, you can toggle cosco
-  temporary.
+  temporary .
 
     :CoscoToggleAutoSetter
 

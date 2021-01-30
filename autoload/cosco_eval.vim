@@ -41,9 +41,10 @@
 "
 " Return values:
 "   0 => Skip
-"   1 => Should add a comma
-"   2 => Should add a semicolon
-"   3 => Remove semicolon/comma of previous line
+"   1 => Should add a comma       (,)
+"   2 => Should add a semicolon   (;)
+"   3 => Should add a doublepoint (:)
+"   4 => Remove semicolon/comma of previous line
 function cosco_eval#Decide()
     
     " ------------------
@@ -62,16 +63,24 @@ function cosco_eval#Decide()
     " when writing a multiline condition, remove the settet semicolon/comma
     elseif matchstr(b:cls, '^\(&&\)\|\(||\)') != '' || matchstr(b:pls, '\(&&\)\|\(||\)$') != ''
         if g:cosco_debug
-            echom "[Round brackets] multiline conditions"
+            echom "[Code] multiline conditions"
         endif
-        return 3
+        return 4
 
     " when writing an if/else/while/for statement, don't add a semicolon!
     elseif matchstr(b:pls, '^\(if\)\|\(else\)\|\(while\)\|\(for\)') != ''
         if g:cosco_debug
-            echom "[Round brackets] if condition"
+            echom "[Code] Boolean conditions"
         endif
         return 0
+
+    " case statements have a double point
+    elseif matchstr(b:pls, '^case') != ''
+        if g:cosco_debug
+            echom "[Code] case"
+        endif
+
+        return 3
 
     " ---------------------------------
     " 2. Already a semicolon/comma 
@@ -255,7 +264,7 @@ function cosco_eval#Decide()
             if g:cosco_debug
                 echom "Removing comma"
             endif
-            return 3
+            return 4
 
         elseif indent(b:cln) <= indent(b:pln)
             if g:cosco_debug

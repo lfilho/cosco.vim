@@ -24,6 +24,14 @@ function! cosco_setter#MakeComma(linenum)
     endif
 endfunction
 
+function! cosco_setter#MakeDoublePoints(linenum)
+    " make sure that there's not already a double point
+    if matchstr(getline(a:linenum), ':$') == ''
+        " add a double point at the end of the line
+        call setline(a:linenum, substitute(getline(a:linenum), '$', ':', 'e'))
+    endif
+endfunction
+
 function! cosco_setter#RemoveCommaOrSemicolon(linenum)
     " remove the comma or semicolon at the end of the line
     call setline(a:linenum, substitute(getline(a:linenum), '[,;]$', '', 'e'))

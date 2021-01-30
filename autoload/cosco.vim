@@ -112,6 +112,9 @@ function cosco#CommaOrSemiColon()
         endif
 
     elseif b:cosco_ret_value == 3
+        call cosco_setter#MakeDoublePoints(b:pln)
+
+    elseif b:cosco_ret_value == 4
         call cosco_setter#RemoveCommaOrSemicolon(b:pln)
     endif
 
