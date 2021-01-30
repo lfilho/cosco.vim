@@ -54,7 +54,7 @@ function cosco_eval#ShouldNotSkip()
     " ------------------------------------
     " 2. Specifique code instructions 
     " ------------------------------------
-    " Add sure that we're not in a multiline condition.
+    " Make sure that we're not in a multiline condition.
     " Example:
     "   if (          while (well_yes &&
     "     val1 &&             but_actually_no ||
