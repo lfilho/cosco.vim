@@ -74,10 +74,10 @@ function cosco_eval#Decide()
         endif
         return 0
 
-    " case statements have a double point
-    elseif matchstr(b:pls, '^case') != ''
+    " case/default statements have a double point
+    elseif matchstr(b:pls, '^\(case\)\|\(default\)') != ''
         if g:cosco_debug
-            echom "[Code] case"
+            echom "[Code] case/default"
         endif
 
         return 3
