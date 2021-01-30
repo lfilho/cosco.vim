@@ -18,33 +18,29 @@
 " (if it's enabled) the commas and semicolons.
 function cosco_autocmds#RefreshAutocmds()
 
-    " make sure first of all, that the user wants this feature
-    if g:cosco_auto_comma_or_semicolon >= 1
-
-        " set for each event in the g:cosco_auto_comma_or_semicolon_events
-        augroup cosco_auto_comma_semicolon
-            autocmd!
-        
-            " 0 => Current filetype is not in the whitelist
-            " 1 => Current filetype is in the whitelist
-            let b:ft_is_in_whitelist = 0
-        
-            " look if the current filetype is in the whitelist
-            for b:enabled_ft in g:cosco_whitelist
-                if b:enabled_ft == &ft
-                    let b:ft_is_in_whitelist = 1
-                    break
-                endif
-            endfor
-        
-            " enable for each event the auto comma/semicolon placer
-            if b:ft_is_in_whitelist
-                for event in g:cosco_auto_comma_or_semicolon_events
-                    execute "autocmd " .event. " <buffer> call cosco#CommaOrSemiColon()"
-                endfor
+    " set for each event in the g:cosco_auto_comma_or_semicolon_events
+    augroup cosco_auto_comma_semicolon
+        autocmd!
+    
+        " 0 => Current filetype is not in the whitelist
+        " 1 => Current filetype is in the whitelist
+        let b:ft_is_in_whitelist = 0
+    
+        " look if the current filetype is in the whitelist
+        for b:enabled_ft in g:cosco_whitelist
+            if b:enabled_ft == &ft
+                let b:ft_is_in_whitelist = 1
+                break
             endif
-        augroup END
-    endif
+        endfor
+    
+        " enable for each event the auto comma/semicolon placer
+        if b:ft_is_in_whitelist
+            for event in g:cosco_auto_comma_or_semicolon_events
+                execute "autocmd " .event. " <buffer> call cosco#CommaOrSemiColon()"
+            endfor
+        endif
+    augroup END
 endfunction
 
 " This will stop all autocmds to add the commas

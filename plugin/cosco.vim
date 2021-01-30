@@ -78,8 +78,11 @@ endif
 " ====================
 " 2. Autocommands 
 " ====================
-" refresh the autocommands if the user moves to another buffer
-autocmd BufEnter * call cosco_autocmds#RefreshAutocmds()
+" make sure first of all, that the user wants the autosetting
+if g:cosco_auto_comma_or_semicolon >= 1
+    " refresh the autocommands if the user moves to another buffer
+    autocmd BufEnter * call cosco_autocmds#RefreshAutocmds()
+endif
 
 " ================
 " 3. Commands 
