@@ -28,7 +28,7 @@
 "   0 => Don't set commas/semicolons automatically
 "   1 => Set commas/semicolons automatically
 if !exists("g:cosco_auto_setter")
-    let g:cosco_auto_setter = 0
+    let g:cosco_auto_setter = 1
 endif
 
 " all events where cosco should set comments/semicolons automatically
@@ -80,6 +80,7 @@ endif
 " ====================
 " make sure first of all, that the user wants the autosetting
 if g:cosco_auto_setter >= 1
+    
     " refresh the autocommands if the user moves to another buffer
     autocmd BufEnter * call cosco_autocmds#RefreshAutocmds()
 endif

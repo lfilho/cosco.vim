@@ -30,6 +30,7 @@ function cosco_autocmds#RefreshAutocmds()
         for b:enabled_ft in g:cosco_whitelist
             if b:enabled_ft == &ft
                 let b:ft_is_in_whitelist = 1
+                "inoremap <buffer> <CR> <CR><CR><C-O>:call cosco#AdaptCode()<CR>O
                 break
             endif
         endfor

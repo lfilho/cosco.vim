@@ -25,8 +25,8 @@ README file.
 But here's an example:
 >
                                 char character|
-                                       ^
-                                     Cursor
+                                              ^
+                                            Cursor
 <
 Normally we'd press the semicolon key and then return key, but thanks to cosco,
 we just need to press the return key! Cosco will add automatically a semicolon
@@ -38,9 +38,9 @@ for us:
                               Cursor
 <
 It'll also add commas in function brackets automatically like in this one:
-
->                           
->                           test(
+>
+                           
+                            test(
                               int val1,
                               int val2,
                               char * val3|
@@ -61,7 +61,7 @@ Each configuration is shown with their default value.
     0 = Autoplacing disabled
     1 = Autoplacing enabled
 >
-        let g:cosco_auto_setter = 0
+        let g:cosco_auto_setter = 1
 <                                                
 
                                                     *g:cosco_auto_setter_events*

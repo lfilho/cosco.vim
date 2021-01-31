@@ -7,8 +7,17 @@
 " Usage: 
 "     Here are all functions which set/replace/remove 
 "     a semicolon or a comma from a given line.
+"
+"     Before they change the line, they need to look first, if
+"     the line ends with a comment like this:
+"
+"         int b   // b is used for something
+"
+"     So it should add the semicolon after b, not after the comment!
+"
 " =========================================================
 function! cosco_setter#AddSemicolon(linenum)
+
     " add a semicolon at the end of the line
     call setline(a:linenum, substitute(getline(a:linenum), '$', ';', 'e'))
 endfunction
