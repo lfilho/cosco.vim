@@ -102,9 +102,9 @@ function cosco_eval#ShouldNotSkip()
     " -----------------------------------------
     " 4. There's already a semicolon/comma 
     " -----------------------------------------
-    " last but not least, look if there's already a semicolon/comma.
+    " last but not least, look if there's already a semicolon/comma/double point.
     " If yes => Do nothing
-    elseif matchstr(b:pls, '[,;]$') != ''
+    elseif matchstr(b:pls, '[,;:]$') != ''
         return 0
 
     " =======================
