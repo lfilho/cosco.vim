@@ -283,7 +283,7 @@ function cosco_eval#ShouldRemove()
     " Without the comma test, it wouldn't go into this elseif clause which would add a semicolon
     " after the comma of func2().
     "
-    if matchstr(b:pls, ')[,;]$') != '' && stridx(b:cls, '{') != -1
+    if matchstr(b:pls, ')[,;]$') != '' && b:cls[0] == '{'
         if g:cosco_debug
             echom "Removing comma"
         endif
