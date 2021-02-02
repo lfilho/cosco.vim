@@ -37,7 +37,7 @@
 "   0 => No, you can skip
 "   1 => Yes, don't skip
 function cosco_eval#ShouldNotSkip()
-    
+
     " ==================
     " Obvious cases 
     " ==================
@@ -116,14 +116,35 @@ function cosco_eval#ShouldNotSkip()
     " Case:
     "   If the previous line ends with an open curly bracket like this:
     "     int main() {
-    "
-    elseif matchstr(b:pls, '{$') != ''
+    elseif b:pls =~ '{$'
+
         if g:cosco_debug
             echom "[Curly Bracket] Opened"
         endif
         return 0
 
-    elseif stridx(b:pls, '}') != -1
+    " This is for an exception. What happens if the user goes back to a curly opened
+    " bracket like this?
+    "
+    "     Step 1          Step 2
+    "
+    "   int main()      int main()
+    "   {               {a| <-- Cursor
+    "     |               
+    "   } ^             }
+    "   Cursor
+    "
+    " Cosco would think that the `int main()` is just a function call but it isn't so we should also look, 
+    " if we are already in an implementation of a function.
+    elseif b:cls[0] == '{' && b:pls =~ ")$"
+
+        if g:cosco_debug
+            echom "[Curly Bracket] Function implementation"
+        endif
+        return 0
+
+    " This is true, if we end a set or an implementation of a function.
+    elseif b:pls[0] == '}'
         if g:cosco_debug
             echom "[Curly Bracket] Closed"
         endif
