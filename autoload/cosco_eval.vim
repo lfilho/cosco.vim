@@ -62,7 +62,7 @@ function cosco_eval#ShouldNotSkip()
     "   ) ^             )     ^
     "   Cursor              Cursor
     "
-    elseif stridx(b:cls, '\(&&\)\|\(||\)') != -1 || stridx(b:pls, '\(&&\)\|\(||\)') != -1
+    elseif b:cls =~ '\(&&\)\|\(||\)' || b:pls =~ '\(&&\)\|\(||\)'
         if g:cosco_debug
             echom "[Code] multiline conditions"
         endif
