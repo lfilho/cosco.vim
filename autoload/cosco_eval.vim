@@ -266,11 +266,16 @@ function cosco_eval#ShouldAdd()
         endif
         return 1
 
-    " -----------------
-    " Look over it 
-    " -----------------
+    " ---------------------
+    " Already a comma? 
+    " ---------------------
     " look, if the line over it ends with a comma, if yes, than we can
-    " do the same
+    " do the same here.
+    " Example:
+    "   [
+    "     yes, <-- Look at this comma
+    "     no 
+    "   ]
     elseif getline(b:pln - 1) =~ ',$'
         if g:cosco_debug
             echom "[CODE] previous line ends with comma as well"
@@ -372,6 +377,25 @@ function cosco_eval#Specials()
     elseif &ft == 'rust'
 
         " add commas in structs
+        " How it works:
+        "
+        "   pub struct Test {
+        "       var1,
+        "       |
+        "   }   ^
+        "     Cursor
+        "
+        " 1. Go to the 'pub struct Test {' line:
+        "     getline(b:pln - 1)
+        " 2. Go to the first space character and than two further. Because the index starts with 0 (+1)
+        "   and our needed index is one index after the space (+1)
+        "   
+        "     pub struct Test
+        "         ^
+        " 3. Look, if it's a rust struct:
+        "     =~ '\cstructure'
+        "
+        " 4. Look our 'var1' has already a comma
         if synIDattr(synID(b:pln - 1, stridx(getline(b:pln - 1), ' ') + 2, 1), 'name') =~ '\cstructure' 
                     \ && b:pls =~ '[^,]$'
             if g:cosco_debug
