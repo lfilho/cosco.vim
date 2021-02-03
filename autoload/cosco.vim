@@ -92,15 +92,18 @@ function cosco#AdaptCode()
     " Add the symbol (if given) 
     " ------------------------------
     if b:cosco_ret_value == 1
-        "echo "Add a comma"
-        call cosco_setter#AddComma(b:pln)
-
-    elseif b:cosco_ret_value == 2
         call cosco_setter#AddDoublePoints(b:pln)
 
-    elseif b:cosco_ret_value == 3
-        "echo "Add a semicolon"
-        call cosco_setter#AddSemicolon(b:pln)
+    elseif b:cosco_ret_value == 2 || b:cosco_ret_value == 3
+
+        if b:cosco_ret_value == 2
+            "echo "Add a comma"
+            call cosco_setter#AddComma(b:pln)
+
+        elseif b:cosco_ret_value == 3
+            "echo "Add a semicolon"
+            call cosco_setter#AddSemicolon(b:pln)
+        endif
 
         " now make sure that we have the same indentation as the previous line
         " since vim will move the cursor not back to its identation (as in step

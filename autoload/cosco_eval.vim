@@ -200,8 +200,8 @@ endfunction
 "   That's why the function returns (if no conditions hit) 3.
 "
 " Return values:
-"   1 => Add a comma        (,)
-"   2 => Add a double point (:)
+"   1 => Add a double point (:)
+"   2 => Add a comma        (,)
 "   3 => Add a semicolon    (;)
 "
 " The return values are oriented at the "Add the symbol (if given)" section of the cosco#CommaOrSemicolon function.
@@ -225,13 +225,13 @@ function cosco_eval#ShouldAdd()
         if g:cosco_debug
             echom "[Square bracket] Adding comma"
         endif
-        return 1
+        return 2
 
     elseif b:nls[0] == '}' && b:pls =~ ')'
         if g:cosco_debug
             echom "[Curly Bracket] In a set"
         endif
-        return 1
+        return 2
 
     " Add a comma, if the user is adding elements in a tuple or
     " arguments in a function.
@@ -254,7 +254,7 @@ function cosco_eval#ShouldAdd()
         if g:cosco_debug
             echom "[Round Bracket] Adding comma"
         endif
-        return 1
+        return 2
     
     " --------------------------
     " Switch case statement 
@@ -263,6 +263,17 @@ function cosco_eval#ShouldAdd()
     elseif b:pls =~ '^\(case\)\|\(default\)'
         if g:cosco_debug
             echom "[Code] case/default"
+        endif
+        return 1
+
+    " -----------------
+    " Look over it 
+    " -----------------
+    " look, if the line over it ends with a comma, if yes, than we can
+    " do the same
+    elseif getline(b:pln - 1) =~ ',$'
+        if g:cosco_debug
+            echom "[CODE] previous line ends with comma as well"
         endif
         return 2
     endif
@@ -334,9 +345,10 @@ endfunction
 " Return values:
 "  -1 => Don't know what to do, go through the general conditions!
 "   0 => Skip
-"   1 => Should add a comma
-"   2 => Should add a semicolon
-"   3 => Remove semicolon/comma of previous line
+"   1 => Should add double points
+"   2 => Should add a comma
+"   3 => Should add a semicolon
+"   4 => Remove semicolon/comma of previous line
 function cosco_eval#Specials()
  
     " ------
@@ -352,6 +364,20 @@ function cosco_eval#Specials()
         "   static void
         elseif synIDattr(synID(b:pln, strlen(b:pl) - 1, 1), 'name') =~ '\ctype'
             return 0
+        endif
+
+    " ---------
+    " Rust 
+    " ---------
+    elseif &ft == 'rust'
+
+        " add commas in structs
+        if synIDattr(synID(b:pln - 1, stridx(getline(b:pln - 1), ' ') + 2, 1), 'name') =~ '\cstructure' 
+                    \ && b:pls =~ '[^,]$'
+            if g:cosco_debug
+                echom "[Rust] in struct"
+            endif
+            return 2
         endif
 
     " ---------------
