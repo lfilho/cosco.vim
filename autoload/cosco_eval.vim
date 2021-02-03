@@ -69,7 +69,7 @@ function cosco_eval#ShouldNotSkip()
         return 0
 
     " when writing an if/else/while/for statement, don't add a semicolon!
-    elseif b:pls =~ '^\(if\)\|\(else\)\|\(while\)\|\(for\)')
+    elseif b:pls =~ '^\(if\)\|\(else\)\|\(while\)\|\(for\)'
         if g:cosco_debug
             echom "[Code] Boolean conditions"
         endif
