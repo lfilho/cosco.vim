@@ -227,11 +227,11 @@ function cosco_eval#ShouldAdd()
         endif
         return 2
 
-    elseif b:nls[0] == '}' && b:pls =~ ')'
-        if g:cosco_debug
-            echom "[Curly Bracket] In a set"
-        endif
-        return 2
+    "elseif b:nls[0] == '}' && b:pls =~ ')'
+    "    if g:cosco_debug
+    "        echom "[Curly Bracket] In a set"
+    "    endif
+    "    return 2
 
     " Add a comma, if the user is adding elements in a tuple or
     " arguments in a function.
