@@ -69,7 +69,7 @@ function cosco_eval#ShouldNotSkip()
         return 0
 
     " when writing an if/else/while/for statement, don't add a semicolon!
-    elseif matchstr(b:pls, '^\(if\)\|\(else\)\|\(while\)\|\(for\)') != ''
+    elseif b:pls =~ '^\(if\)\|\(else\)\|\(while\)\|\(for\)')
         if g:cosco_debug
             echom "[Code] Boolean conditions"
         endif
@@ -104,7 +104,7 @@ function cosco_eval#ShouldNotSkip()
     " -----------------------------------------
     " last but not least, look if there's already a semicolon/comma/double point.
     " If yes => Do nothing
-    elseif matchstr(b:pls, '[,;:]$') != ''
+    elseif b:pls =~ '[,;:]$'
         return 0
 
     " =======================
@@ -162,7 +162,7 @@ function cosco_eval#ShouldNotSkip()
     "     |
     "   ] ^
     "   Cursor
-    elseif matchstr(b:pls, '\[$') != ''
+    elseif b:pls =~ '\[$'
         if g:cosco_debug
             echom "[Square bracket] opened"
         endif
@@ -178,7 +178,7 @@ function cosco_eval#ShouldNotSkip()
     "     )|            |
     "      ^        )   ^
     "     Cursor      Cursor
-    elseif matchstr(b:pls, '(\s*$') != ''
+    elseif b:pls =~ '(\s*$'
         if g:cosco_debug
             echom "[Round brackets] Open bracket in prev line"
         endif
@@ -216,14 +216,20 @@ function cosco_eval#ShouldAdd()
     "         val2
     "       ]
     "
-    " Pattern of matchstr:
+    " Pattern:
     "   - First pattern:
     "       "\]\s*$"  => Does the current line end with an ending ']'?
     "       "[^\[].*" => Don't let an open '[' be in the same line with
     "                     the ending ']'!
-    if (b:nls[0] == ']' || matchstr(b:cls, '[^\[].*\]\s*$') != '')
+    if b:nls[0] == ']' || b:cls =~ '[^\[].*\]\s*$'
         if g:cosco_debug
             echom "[Square bracket] Adding comma"
+        endif
+        return 1
+
+    elseif b:nls[0] == '}' && b:pls =~ ')'
+        if g:cosco_debug
+            echom "[Curly Bracket] In a set"
         endif
         return 1
 
@@ -242,9 +248,9 @@ function cosco_eval#ShouldAdd()
     "   test();
     "   if ()
     " Normally it would add a comma after "test();", but thanks to the last
-    " matchstr() condition, this won't happen if there's already a comma/
+    " last pattern condition, this won't happen if there's already a comma/
     " semicolon.
-    elseif (b:nls[0] == ')' || matchstr(b:cls, ')\s*{\?$') != '')
+    elseif b:nls[0] == ')' || b:cls =~ ')\s*{\?$'
         if g:cosco_debug
             echom "[Round Bracket] Adding comma"
         endif
@@ -254,7 +260,7 @@ function cosco_eval#ShouldAdd()
     " Switch case statement 
     " --------------------------
     " 'case' and 'default' need a double point in the end
-    elseif matchstr(b:pls, '^\(case\)\|\(default\)') != ''
+    elseif b:pls =~ '^\(case\)\|\(default\)'
         if g:cosco_debug
             echom "[Code] case/default"
         endif
@@ -304,7 +310,7 @@ function cosco_eval#ShouldRemove()
     " Without the comma test, it wouldn't go into this elseif clause which would add a semicolon
     " after the comma of func2().
     "
-    if matchstr(b:pls, ')[,;]$') != '' && b:cls[0] == '{'
+    if b:pls =~ ')[,;]$' && b:cls[0] == '{'
         if g:cosco_debug
             echom "Removing comma"
         endif
