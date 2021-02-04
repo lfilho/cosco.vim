@@ -260,7 +260,7 @@ function cosco_eval#ShouldAdd()
     " Switch case statement 
     " --------------------------
     " 'case' and 'default' need a double point in the end
-    elseif b:pls =~ '^\(case\)\|\(default\)'
+    elseif b:pls =~ '^\(\(case\)\|\(default\)\)'
         if g:cosco_debug
             echom "[Code] case/default"
         endif
