@@ -136,11 +136,27 @@ function cosco_eval#ShouldNotSkip()
     "
     " Cosco would think that the `int main()` is just a function call but it isn't so we should also look, 
     " if we are already in an implementation of a function.
-    elseif b:cls[0] == '{' && b:pls =~ ")$"
+    "
+    " INFO: Need to discuss of porting it to cosco_eval#Specials()
+    " This also looks, if the user declares a struct like that:
+    "   struct Test 
+    "   {| <-- Cursor
+    "
+    "   }
+    "
+    elseif b:cls[0] == '{' 
 
-        if g:cosco_debug
-            echom "[Curly Bracket] Function implementation"
+        if synIDattr(synID(b:pln, stridx(b:pl, '('), 1), 'name') =~ '\cfunction'
+            if g:cosco_debug
+                echom "[Curly Bracket] Function implementation"
+            endif
+        
+        elseif b:pl =~ '\c^struct'
+            if g:cosco_debug
+                echom "[Culry Bracket] Struct declaration"
+            endif
         endif
+
         return 0
 
     " This is true, if we end a set or an implementation of a function.
@@ -368,6 +384,19 @@ function cosco_eval#Specials()
         " skip declarations like that:
         "   static void
         elseif synIDattr(synID(b:pln, strlen(b:pl) - 1, 1), 'name') =~ '\ctype'
+            return 0
+        
+        " it might happen, that we have a declaration where a pointer has to be
+        " returned and the user writes it like that:
+        "
+        "   return_type *
+        "   func_nae(args)
+        "   {
+        "     <code>
+        "   }
+        "
+        " So we need to skip it, if a star ends in the current line
+        elseif b:pls =~ '\*$'
             return 0
         endif
 
