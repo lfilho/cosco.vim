@@ -103,12 +103,12 @@ autoload
 └── cosco.vim
 ```
 
-Here the usages of the files:
+Here are the usages of the files:
 
 ### cosco_autocmds.vim
 
 The `cosco_autocmds#RefreshAutocmds()` is inside there. This enables for all
-events, declared in the `g:cosco_auto_comma_or_semicolon_events` list, the
+events, declared in the `g:cosco_auto_setter_events` list, the
 auto-semicolon-and-comma setter.
 
 ### cosco_eval.vim

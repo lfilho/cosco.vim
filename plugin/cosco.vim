@@ -83,7 +83,7 @@ if g:cosco_auto_setter >= 1
     
     " refresh the autocommands if the user moves to another buffer
     autocmd BufEnter * call cosco_autocmds#RefreshAutocmds()
-"    inoremap <CR> <C-o>:call cosco#AdaptCode()<CR>
+    "inoremap <CR> <C-O>:call cosco#AdaptCode()<CR>
 endif
 
 " ================
