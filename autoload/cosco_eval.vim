@@ -292,7 +292,12 @@ function cosco_eval#ShouldAdd()
     "     yes, <-- Look at this comma
     "     no 
     "   ]
-    elseif getline(b:pln - 1) =~ ',$'
+    "
+    " Also make sure that, the current line doesn't ends with a closed bracket like this:
+    "   return (
+    "       1,
+    "       2)| <-- Cursor
+    elseif getline(b:pln - 1) =~ ',$' && b:pls =~# '[^\]\})]$'
         if g:cosco_debug
             echom "[CODE] previous line ends with comma as well"
         endif
