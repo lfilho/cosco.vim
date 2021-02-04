@@ -41,7 +41,7 @@ endif
 " Possible Values:
 "   0 => No
 "   1 => Yes
-if !exists("g:cosco_ignore_comment_lines")
+if !exists("g:cosco_ignore_comments")
     let g:cosco_ignore_comments = 1
 endif
 
