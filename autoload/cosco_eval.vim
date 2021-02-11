@@ -403,6 +403,14 @@ function cosco_eval#Specials()
         " So we need to skip it, if a star ends in the current line
         elseif b:pls =~ '\*$'
             return 0
+
+        " look, if the previous line ends with a tag like this:
+        "   template <class... T>
+        "   |
+        "   ^
+        " Cursor
+        elseif b:pls =~ '>$'
+            return 0
         endif
 
     " ---------
