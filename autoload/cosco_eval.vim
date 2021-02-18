@@ -433,7 +433,7 @@ function cosco_eval#Specials()
         " 3. Look, if it's a rust struct:
         "     =~ '\cstructure'
         "
-        " 4. Look our 'var1' has already a comma
+        " 4. Look if our 'var1' has already a comma
         if synIDattr(synID(b:pln - 1, stridx(getline(b:pln - 1), ' ') + 2, 1), 'name') =~ '\cstructure' 
                     \ && b:pls =~ '[^,]$'
             if g:cosco_debug
