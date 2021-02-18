@@ -440,6 +440,19 @@ function cosco_eval#Specials()
                 echom "[Rust] in struct"
             endif
             return 2
+
+        " don't add a semicolon after derive macros!
+        " Example:
+        "   
+        "   #[derive(Debug())]
+        "   |
+        "   ^
+        " Cursor
+        elseif b:pls[0] == '#'
+            if g:cosco_debug
+                echom "[Rust] creating derive macros"
+            endif
+            return 0
         endif
 
     " ---------------
