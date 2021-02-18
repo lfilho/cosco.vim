@@ -1,9 +1,5 @@
 " =========================================================
 " Filename: cosco_helpers.vim
-" Author(s) - (date of last changes): 
-"   TornaxO7  - 29.01.2021
-"   Luiz Gonzaga dos Santos Filho - 07.08.2018
-" Version: 1.0
 " Usage: 
 "     Here are all intern functions which are used in
 "     the cosco plugin.

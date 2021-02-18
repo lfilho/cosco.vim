@@ -1,9 +1,5 @@
 " =========================================================
 " Filename: cosco.vim
-" Author(s) - (date of last changes): 
-"   TornaxO7  - 29.01.2021
-"   Luiz Gonzaga dos Santos Filho - 07.08.2018
-" Version: 1.0
 " Usage: 
 "     Here are all values which are loaded first for the
 "     cosco plugin. It has the following structure:
@@ -16,6 +12,13 @@
 "         3.1 Commandline commands
 "         3.2 <Plug> commands
 " =========================================================
+
+" don't reload the plugin too often
+if !exists("g:cosco_initialised")
+    let g:cosco_initialised = 1
+else
+    finish
+endif
 
 " =================
 " 1. Variables 

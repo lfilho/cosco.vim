@@ -1,9 +1,5 @@
 " =========================================================
 " Filename: cosco_autocmds.vim
-" Author(s) - (date of last changes): 
-"   TornaxO7  - 29.01.2021
-"   Luiz Gonzaga dos Santos Filho - 07.08.2018
-" Version: 1.0
 " Usage: 
 "     Here is the function which sets up all autocmds
 "     which are needed for the cosco plugin. In general

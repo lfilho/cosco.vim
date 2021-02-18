@@ -1,9 +1,5 @@
 " =========================================================
 " Filename: setter_remover.vim
-" Author(s) - (date of last changes): 
-"   TornaxO7  - 29.01.2021
-"   Luiz Gonzaga dos Santos Filho - 07.08.2018
-" Version: 1.0
 " Usage: 
 "     Here are all functions which set/replace/remove 
 "     a semicolon or a comma from a given line.
