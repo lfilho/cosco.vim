@@ -64,9 +64,21 @@ Each configuration is shown with their default value.
         let g:cosco_auto_setter = 1
 <                                                
 
+                                                                *g:cosco_map_cr*
+* If set to 1, cosco will look, if it can map the main function to the <CR> key
+  in order to use less ressources. If there's already an `imap` for <CR>, cosco
+  will use the autocommand events in `g:cosco_auto_setter_events`.
+  Possible values:
+    0 = Don't try to imap to the <CR> key
+    1 = Try to imap to the <CR> key
+>
+        let g:cosco_map_cr = 1
+<
+
                                                     *g:cosco_auto_setter_events*
 * Set at which events cosco should look, if it can set a comma/semicolon. 
   See `:h autocmd-events` to get all possible autocommand-events.
+  This list is gonna be ignored, if `g:cosco_map_cr` is 0.
 >
         let g:cosco_auto_setter_events = ["TextChangedI"]
 <

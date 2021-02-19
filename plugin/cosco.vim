@@ -65,6 +65,12 @@ if !exists("g:cosco_enable")
     let g:cosco_enable = 1
 endif
 
+" Look, if cosco should try to map the main function
+" to the <CR> key.
+if !exists("g:cosco_map_cr")
+    let g:cosco_map_cr = 1
+endif
+
 " -------------------
 " Core variables 
 " -------------------
@@ -83,7 +89,7 @@ endif
 " make sure first of all, that the user wants the autosetting
 if g:cosco_auto_setter >= 1
 
-    if mapcheck('<CR>') == ''
+    if mapcheck('<CR>') == '' && g:cosco_map_cr
         imap <CR> <CR><CMD>call cosco#AdaptCode()<CR>
     else
         " refresh the autocommands if the user moves to another buffer
