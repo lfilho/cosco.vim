@@ -83,7 +83,7 @@ endif
 " make sure first of all, that the user wants the autosetting
 if g:cosco_auto_setter >= 1
 
-    if execute(':imap <CR>') =~ '\cno mapping'
+    if mapcheck('<CR>') == ''
         imap <CR> <CR><CMD>call cosco#AdaptCode()<CR>
     else
         " refresh the autocommands if the user moves to another buffer
