@@ -43,7 +43,7 @@ function cosco_eval#ShouldNotSkip()
     " skip, if the file is empty currently...
     if b:pln == 0
         if g:cosco_debug
-            echom "First line"
+            echom "[Cosco:Code] First line"
         endif
         return 0
 
@@ -60,14 +60,14 @@ function cosco_eval#ShouldNotSkip()
     "
     elseif b:cls =~ '\(&&\)\|\(||\)' || b:pls =~ '\(&&\)\|\(||\)'
         if g:cosco_debug
-            echom "[Code] multiline conditions"
+            echom "[Cosco:Code] Multiline conditions"
         endif
         return 0
 
     " when writing an if/else/while/for statement, don't add a semicolon!
     elseif b:pls =~ '^\(if\)\|\(else\)\|\(while\)\|\(for\)'
         if g:cosco_debug
-            echom "[Code] Boolean conditions"
+            echom "[Cosco:Code] Boolean conditions"
         endif
         return 0
 
@@ -91,7 +91,7 @@ function cosco_eval#ShouldNotSkip()
     elseif g:cosco_ignore_comments &&
                 \ synIDattr(synID(b:pln, indent(b:pln) + 1, 1), 'name') =~ '\ccomment'
         if g:cosco_debug
-            echom "[Comment] Is in comment"
+            echom "[Cosco:Comment] Is in comment"
         endif
         return 0
      
@@ -115,7 +115,7 @@ function cosco_eval#ShouldNotSkip()
     elseif b:pls =~ '{$'
 
         if g:cosco_debug
-            echom "[Curly Bracket] Opened"
+            echom "[Cosco:Curly Bracket] Opened"
         endif
         return 0
 
@@ -144,12 +144,12 @@ function cosco_eval#ShouldNotSkip()
 
         if synIDattr(synID(b:pln, stridx(b:pl, '('), 1), 'name') =~ '\cfunction'
             if g:cosco_debug
-                echom "[Curly Bracket] Function implementation"
+                echom "[Cosco:Curly Bracket] Function implementation"
             endif
         
         elseif b:pl =~ '\c^struct'
             if g:cosco_debug
-                echom "[Culry Bracket] Struct declaration"
+                echom "[Cosco:Culry Bracket] Struct declaration"
             endif
         endif
 
@@ -158,7 +158,7 @@ function cosco_eval#ShouldNotSkip()
     " This is true, if we end a set or an implementation of a function.
     elseif b:pls[0] == '}'
         if g:cosco_debug
-            echom "[Curly Bracket] Closed"
+            echom "[Cosco:Curly Bracket] Closed"
         endif
         return 0
 
@@ -176,7 +176,7 @@ function cosco_eval#ShouldNotSkip()
     "   Cursor
     elseif b:pls =~ '\[$'
         if g:cosco_debug
-            echom "[Square bracket] opened"
+            echom "[Cosco:Square bracket] opened"
         endif
         return 0
 
@@ -192,7 +192,7 @@ function cosco_eval#ShouldNotSkip()
     "     Cursor      Cursor
     elseif b:pls =~ '(\s*$'
         if g:cosco_debug
-            echom "[Round brackets] Open bracket in prev line"
+            echom "[Cosco:Round brackets] Open bracket in prev line"
         endif
         return 0
     endif
@@ -235,13 +235,13 @@ function cosco_eval#ShouldAdd()
     "                     the ending ']'!
     if b:nls[0] == ']' || b:cls =~ '[^\[].*\]\s*$'
         if g:cosco_debug
-            echom "[Square bracket] Adding comma"
+            echom "[Cosco:Square bracket] Adding comma"
         endif
         return 2
 
     "elseif b:nls[0] == '}' && b:pls =~ ')'
     "    if g:cosco_debug
-    "        echom "[Curly Bracket] In a set"
+    "        echom "[Cosco:Curly Bracket] In a set"
     "    endif
     "    return 2
 
@@ -264,7 +264,7 @@ function cosco_eval#ShouldAdd()
     " semicolon.
     elseif b:nls[0] == ')' || b:cls =~ ')\s*{\?$'
         if g:cosco_debug
-            echom "[Round Bracket] Adding comma"
+            echom "[Cosco:Round Bracket] Adding comma"
         endif
         return 2
     
@@ -274,7 +274,7 @@ function cosco_eval#ShouldAdd()
     " 'case' and 'default' need a double point in the end
     elseif b:pls =~ '^\(\(case\)\|\(default\)\)'
         if g:cosco_debug
-            echom "[Code] case/default"
+            echom "[Cosco:Code] case/default"
         endif
         return 1
 
@@ -295,7 +295,7 @@ function cosco_eval#ShouldAdd()
     "       2)| <-- Cursor
     elseif getline(b:pln - 1) =~ ',$' && b:pls =~# '[^\]\})]$'
         if g:cosco_debug
-            echom "[CODE] previous line ends with comma as well"
+            echom "[Cosco:Code] previous line ends with comma as well"
         endif
         return 2
     endif
@@ -345,7 +345,7 @@ function cosco_eval#ShouldRemove()
     "
     if b:pls =~ ')[,;]$' && b:cls[0] == '{'
         if g:cosco_debug
-            echom "Removing comma"
+            echom "[Cosco] Removing comma"
         endif
         return 1
     endif
@@ -380,11 +380,17 @@ function cosco_eval#Specials()
 
         " skip macros
         if b:pls[0] == '#'
+            if g:cosco_debug
+                echom "[Cosco: C/C++] skip macros"
+            endif
             return 0
 
         " skip declarations like that:
         "   static void
         elseif synIDattr(synID(b:pln, strlen(b:pl) - 1, 1), 'name') =~ '\ctype'
+            if g:cosco_debug
+                echom "[Cosco: C/C++] skip type declaration"
+            endif
             return 0
         
         " it might happen, that we have a declaration where a pointer has to be
@@ -398,6 +404,9 @@ function cosco_eval#Specials()
         "
         " So we need to skip it, if a star ends in the current line
         elseif b:pls =~ '\*$'
+            if g:cosco_debug
+                echom "[Cosco: C/C++] declaring function in multiple lines"
+            endif
             return 0
 
         " look, if the previous line ends with a tag like this:
@@ -406,6 +415,9 @@ function cosco_eval#Specials()
         "   ^
         " Cursor
         elseif b:pls =~ '>$'
+            if g:cosco_debug
+                echom "[Cosco: C++] Writing template"
+            endif
             return 0
         endif
 
@@ -437,7 +449,7 @@ function cosco_eval#Specials()
         if synIDattr(synID(b:pln - 1, stridx(getline(b:pln - 1), ' ') + 2, 1), 'name') =~ '\cstructure' 
                     \ && b:pls =~ '[^,]$'
             if g:cosco_debug
-                echom "[Rust] in struct"
+                echom "[Cosco: Rust] in struct"
             endif
             return 2
 
@@ -450,7 +462,7 @@ function cosco_eval#Specials()
         " Cursor
         elseif b:pls[0] == '#'
             if g:cosco_debug
-                echom "[Rust] creating derive macros"
+                echom "[Cosco: Rust] creating derive macros"
             endif
             return 0
         endif
