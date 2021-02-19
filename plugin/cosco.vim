@@ -77,15 +77,18 @@ if !exists("g:cosco_debug")
     let g:cosco_debug = 0
 endif
 
-" ====================
-" 2. Autocommands 
-" ====================
+" ============================
+" 2. Autocommands/Mapping 
+" ============================
 " make sure first of all, that the user wants the autosetting
 if g:cosco_auto_setter >= 1
-    
-    " refresh the autocommands if the user moves to another buffer
-    autocmd BufEnter * call cosco_autocmds#RefreshAutocmds()
-    "imap <Cr> <CR><CMD>call cosco#AdaptCode()<CR>
+
+    if execute(':imap <CR>') =~ '\cno mapping'
+        imap <CR> <CR><CMD>call cosco#AdaptCode()<CR>
+    else
+        " refresh the autocommands if the user moves to another buffer
+        autocmd BufEnter * call cosco_autocmds#RefreshAutocmds()
+    endif
 endif
 
 " ================
