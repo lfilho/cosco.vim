@@ -155,8 +155,20 @@ function cosco_eval#ShouldNotSkip()
 
         return 0
 
-    " This is true, if we end a set or an implementation of a function.
-    elseif b:pls[0] == '}'
+    " There could be the following cases:
+    " 1: It's the ending bracket of a function or a set.
+    " 2. It's a one-liner-function
+    "
+    "   funcname() {          void funcname() {}
+    "                         |
+    "   }                     ^
+    "   |                   Cursor
+    "   ^
+    " Cursor
+    elseif b:pls[0] == '}' || 
+                \ (
+                \   b:pls =~ '}$' && synIDattr(synID(b:pln, stridx(b:pl, '(') - 1, 1), 'name') =~ '\cfunction'
+                \ )
         if g:cosco_debug
             echom "[Cosco:Curly Bracket] Closed"
         endif
@@ -387,28 +399,18 @@ function cosco_eval#Specials()
 
         " skip declarations like that:
         "   static void
+        "   funcname()
+        "
+        " or that:
+        "   void *
+        "   funcname()
         elseif synIDattr(synID(b:pln, strlen(b:pl) - 1, 1), 'name') =~ '\ctype'
+                    \ || b:pls =~ '\*$'
             if g:cosco_debug
                 echom "[Cosco: C/C++] skip type declaration"
             endif
             return 0
         
-        " it might happen, that we have a declaration where a pointer has to be
-        " returned and the user writes it like that:
-        "
-        "   return_type *
-        "   func_nae(args)
-        "   {
-        "     <code>
-        "   }
-        "
-        " So we need to skip it, if a star ends in the current line
-        elseif b:pls =~ '\*$'
-            if g:cosco_debug
-                echom "[Cosco: C/C++] declaring function in multiple lines"
-            endif
-            return 0
-
         " look, if the previous line ends with a tag like this:
         "   template <class... T>
         "   |
@@ -419,6 +421,7 @@ function cosco_eval#Specials()
                 echom "[Cosco: C++] Writing template"
             endif
             return 0
+
         endif
 
     " ---------
