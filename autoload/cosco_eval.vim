@@ -167,7 +167,7 @@ function cosco_eval#ShouldNotSkip()
     " Cursor
     elseif b:pls[0] == '}' || 
                 \ (
-                \   b:pls =~ '}$' && synIDattr(synID(b:pln, stridx(b:pl, '(') - 1, 1), 'name') =~ '\cfunction'
+                \   b:pls =~ '}$' && synIDattr(synID(b:pln, stridx(b:pl, '(') - 1, 1), 'name') =~ '\cfunc'
                 \ )
         if g:cosco_debug
             echom "[Cosco:Curly Bracket] Closed"
