@@ -24,6 +24,39 @@ function! cosco_helpers#AutoSetterToggle()
     endif
 endfunction
 
+" Look if cosco should be enabled for the current filetype
+" Return values:
+"   0 => Current filetype is not in the whitelist
+"   1 => Current filetype is in the whitelist
+function cosco_helpers#FiletypeInWhitelist()
+
+    " look if the current filetype is in the whitelist
+    for b:enabled_ft in g:cosco_whitelist
+        if b:enabled_ft == &ft
+            return 1
+        endif
+    endfor
+
+    return 0
+endfunction
+
+" This function tries to map the cosco#AdaptCode() function to the <CR>
+" key (if the user set the setting), otherwise it will call the function
+" for each event in the list.
+function cosco_helpers#ActivateCosco() 
+
+    if cosco_helpers#FiletypeInWhitelist() 
+        " try to map the main function to <CR> if possible
+        if g:cosco_map_cr && mapcheck('<CR>') == ''
+            imap <CR> <CR><CMD>call cosco#AdaptCode()<CR>
+        
+        " otherwise use the given events in the list to enable cosco
+        else
+            call cosco_autocmds#ActivateCoscoEvents()
+        endif
+    endif
+endfunction
+
 " --------------------
 " Strip functions 
 " --------------------

@@ -88,13 +88,7 @@ endif
 " ============================
 " make sure first of all, that the user wants the autosetting
 if g:cosco_auto_setter >= 1
-
-    if mapcheck('<CR>') == '' && g:cosco_map_cr
-        imap <CR> <CR><CMD>call cosco#AdaptCode()<CR>
-    else
-        " refresh the autocommands if the user moves to another buffer
-        autocmd BufEnter * call cosco_autocmds#RefreshAutocmds()
-    endif
+    autocmd BufEnter * call cosco_helpers#ActivateCosco()
 endif
 
 " ================

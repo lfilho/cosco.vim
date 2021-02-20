@@ -9,34 +9,14 @@
 
 " this function is (in general) called, if the user entered a new buffer
 " (see plugin/cosco.vim => 2. Autocommands)
-"
-" It will set the autocommand for the new buffer to add automatically 
-" (if it's enabled) the commas and semicolons.
-function cosco_autocmds#RefreshAutocmds()
-
-    " set for each event in the g:cosco_auto_comma_or_semicolon_events
+function cosco_autocmds#ActivateCoscoEvents()
     augroup cosco_auto_comma_semicolon
         autocmd!
-    
-        " 0 => Current filetype is not in the whitelist
-        " 1 => Current filetype is in the whitelist
-        let b:ft_is_in_whitelist = 0
-    
-        " look if the current filetype is in the whitelist
-        for b:enabled_ft in g:cosco_whitelist
-            if b:enabled_ft == &ft
-                let b:ft_is_in_whitelist = 1
-                "inoremap <buffer> <CR> <CR><CR><C-O>:call cosco#AdaptCode()<CR>O
-                break
-            endif
-        endfor
-    
+
         " enable for each event the auto comma/semicolon placer
-        if b:ft_is_in_whitelist
-            for event in g:cosco_auto_setter_events
-                execute "autocmd " .event. " <buffer> call cosco#AdaptCode()"
-            endfor
-        endif
+        for event in g:cosco_auto_setter_events
+            execute "autocmd " .event. " <buffer> call cosco#AdaptCode()"
+        endfor
     augroup END
 endfunction
 
