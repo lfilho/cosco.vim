@@ -60,11 +60,11 @@ endfunction
 " --------------------
 " Strip functions 
 " --------------------
-" 1. Remove all spaces on the left and on the right
+" Step 1: Remove all spaces on the left
 "   Example:
 "     "  int rofl;    " => "int rofl;     "
 "
-" 2. Remove all comments and space on the right
+" Step 2: Remove all comments and space on the right
 "   Example:
 "     "int rofl; // hello there    " => "int rofl;"
 function! cosco_helpers#Strip(string)

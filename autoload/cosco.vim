@@ -21,11 +21,14 @@ endif
 " ############################
 
 " How it general works:
-"   1. Get some information of the previous line in order
-"     to decide what to do.
+"   1. Get some information of the:
+"       - previous line
+"       - current line
+"       - next line
+"     in order to evaluate the situation.
 "   2. Look if we need to add a semicolon/comma or not. If not => Stop the function
 "   3. Otherwise look if there are some special "rules" for the given filetype.
-"     If yes, load them. (They are in the for autoload/filetypes)
+"     If yes, load them. (They are in the autoload/cosco_eval.vim)
 "   4. Now do the general looking, like is in the *previous line* an assignment or a declaration and so on.
 "     It *won't* set the semicolon/comma in the currentline! Only in the previous line!
 "
@@ -58,15 +61,13 @@ function cosco#AdaptCode()
     let b:pl  = getline(prevnonblank(b:cln - 1))  " pl  = *P*revious *L*ine
     let b:pls = cosco_helpers#Strip(b:pl)         " pl  = *P*revious *L*ine
 
+    " =============================
+    " Evaluating the situation 
+    " =============================
     " this variable is set after an extra file set its conditions.
     " Possible values:
     "   0 => Don't check further
     "   1 => Do check further
-    let b:cosco_ret_value = 0
-
-    " =============================
-    " Evaluating the situation 
-    " =============================
     let b:cosco_ret_value = cosco_eval#Specials()
 
     " if the special cases couldn't find anything
@@ -105,6 +106,8 @@ function cosco#AdaptCode()
         " since vim will move the cursor not back to its identation (as in step
         " 2), if the user uses the enter key to get to the next line
         " (the vertical line should represent the cursor)
+        " Here's an example in C:
+        "
         "   Step 1:
         "     short a|
         "
@@ -119,7 +122,10 @@ function cosco#AdaptCode()
         "   Step 4: (cosco: fix indentation of cursor)
         "     short a;
         "     |
+        "
         " Step 4 does this setline here.
+        " This "b:cls == ''" condition is there to avoid deleting the line, if
+        " the line has already some contents.
         "
         if b:cls == ''
             call setline(b:cln, py3eval("' ' * ". indent(b:pln)))
