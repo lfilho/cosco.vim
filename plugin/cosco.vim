@@ -38,7 +38,6 @@ endif
 if !exists("g:cosco_auto_setter_events")
     let g:cosco_auto_setter_events = ["TextChangedI"]
 endif
-
 " should cosco add semicolons/commas in comments as well?
 " Possible Values:
 "   0 => No

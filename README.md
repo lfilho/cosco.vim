@@ -24,13 +24,19 @@ _Cosco's official [vim.org page](http://www.vim.org/scripts/script.php?script_id
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Installation (via plugin-manager)
-- [Vim-Plug](https://github.com/junegunn/vim-plug):
+It uses [vim-polyglot](https://vimawesome.com/plugin/vim-polyglot) as a
+**dependencie**! Please install it as well:
+```vim
+Plug 'sheerun/vim-polyglot'
 ```
+
+- [Vim-Plug](https://github.com/junegunn/vim-plug):
+```vim
 Plug 'lfilho/cosco.vim', {'branch': 'stable'}
 ```
 
 - [Vundle](https://github.com/VundleVim/Vundle.vim):
-```
+```vim
 Plugin 'lfilho/cosco.vim'
 ```
 
