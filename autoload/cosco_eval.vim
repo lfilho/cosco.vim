@@ -142,6 +142,8 @@ function cosco_eval#ShouldNotSkip()
     "
     elseif b:cls[0] == '{' 
 
+        echom "Nope"
+
         if synIDattr(synID(b:pln, stridx(b:pl, '('), 1), 'name') =~ '\cfunction'
             if g:cosco_debug
                 echom "[Cosco:Curly Bracket] Function implementation"
@@ -153,7 +155,7 @@ function cosco_eval#ShouldNotSkip()
             endif
         endif
 
-        return 0
+        return 1
 
     " There could be the following cases:
     " 1: It's the ending bracket of a function or a set.

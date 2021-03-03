@@ -126,7 +126,7 @@ function cosco#AdaptCode()
         " Step 4 does this setline here.
         " This "b:cls == ''" condition is there to avoid deleting the line, if
         " the line has already some contents.
-        "
+        
         if b:cls == ''
             call setline(b:cln, py3eval("' ' * ". indent(b:pln)))
         endif

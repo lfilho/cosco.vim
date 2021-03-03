@@ -66,8 +66,8 @@ Each configuration is shown with their default value.
 
                                                                 *g:cosco_map_cr*
 * If set to 1, cosco will look, if it can map the main function to the <CR> key
-  in order to use less ressources. If there's already an `imap` for <CR>, cosco
-  will use the autocommand events in `g:cosco_auto_setter_events`.
+  in order to use less ressources. Use this command: `:verbose imap <CR>` to see
+  if there's already a mapping to `<CR>`.
   Possible values:
     0 = Don't try to imap to the <CR> key
     1 = Try to imap to the <CR> key

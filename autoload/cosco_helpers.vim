@@ -46,10 +46,11 @@ endfunction
 function cosco_helpers#ActivateCosco() 
 
     if cosco_helpers#FiletypeInWhitelist() 
-        " try to map the main function to <CR> if possible
-        if g:cosco_map_cr && mapcheck('<CR>') == ''
+
+        " if the user wants to map cosco to CR
+        if g:cosco_map_cr
             imap <CR> <CR><CMD>call cosco#AdaptCode()<CR>
-        
+
         " otherwise use the given events in the list to enable cosco
         else
             call cosco_autocmds#ActivateCoscoEvents()
