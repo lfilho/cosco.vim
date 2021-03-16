@@ -434,12 +434,11 @@ function cosco_eval#Specials()
         "                         Cursor
         "
         " Cosco has to check, if we're continueing an output.
-        elseif b:cls =~ '<<'
+        elseif b:cls =~ '^<<'
             if g:cosco_debug
                 echom "[Cosco: C++] Multiline stdout"
             endif
             return 4
-
         endif
 
     " ---------

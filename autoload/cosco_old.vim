@@ -8,42 +8,6 @@ let g:cosco_ignore_ft_pattern = get(g:, 'cosco_ignore_ft_pattern', {})
 " =================
 " Helper functions:
 " =================
-
-function! s:strip(string)
-    return substitute(a:string, '^\s*\(.\{-}\)\s*$', '\1', '')
-endfunction
-
-function! s:getNextNonBlankLineNum(lineNum)
-    return s:getFutureNonBlankLineNum(a:lineNum, 1, line('$'))
-endfunction
-
-function! s:getPrevNonBlankLineNum(lineNum)
-    return s:getFutureNonBlankLineNum(a:lineNum, -1, 1)
-endfunction
-
-function! s:getNextNonBlankLine(lineNum)
-    return getline(s:getNextNonBlankLineNum(a:lineNum))
-endfunction
-
-function! s:getPrevNonBlankLine(lineNum)
-    return getline(s:getPrevNonBlankLineNum(a:lineNum))
-endfunction
-
-function! s:getFutureNonBlankLineNum(lineNum, direction, limitLineNum)
-    if (a:lineNum == a:limitLineNum)
-        return ''
-    endif
-
-    let l:futureLineNum = a:lineNum + (1 * a:direction)
-    let l:futureLine = s:strip(getline(l:futureLineNum))
-
-    if (l:futureLine == '')
-        return s:getFutureNonBlankLineNum(l:futureLineNum, a:direction, a:limitLineNum)
-    endif
-
-    return l:futureLineNum
-endfunction
-
 function! s:hasUnactionableLines()
     " Ignores comment lines, if global option is configured
     if (g:cosco_ignore_comment_lines == 1)
@@ -54,7 +18,7 @@ function! s:hasUnactionableLines()
     endif
 
     " Ignores empty lines or lines ending with opening ([{
-    if (s:strip(b:currentLine) == '' || b:currentLineLastChar =~ '[{[(]')
+    if (s:strip(cl) == '' || b:currentLineLastChar =~ '[{[(]')
         return 1
     endif
 
@@ -139,7 +103,7 @@ endfunction
 " Main function:
 " ==============
 
-function! cosco#commaOrSemiColon()
+function! cosco#ManualCommaOrSemicolon()
     " Don't run if we're in a readonly buffer:
     if (&readonly == 1)
         return
@@ -153,15 +117,13 @@ function! cosco#commaOrSemiColon()
     let b:wasExtensionExecuted = 0
 
     let b:originalLineNum = line('.')
-    let b:currentLine = getline(b:originalLineNum)
-    let b:currentLineLastChar = matchstr(b:currentLine, '.$')
-    let b:currentLineFirstChar = matchstr(b:currentLine, '^.')
+    let b:cl = getline(b:originalLineNum)
     let b:currentLineIndentation = indent(b:originalLineNum)
 
     let b:originalCursorPosition = getpos('.')
 
     let b:nextLine = s:getNextNonBlankLine(b:originalLineNum)
-    let b:prevLine = s:getPrevNonBlankLine(b:originalLineNum)
+    let b:prevLine = 'hi'
 
     let b:nextLineIndentation = indent(s:getNextNonBlankLineNum(b:originalLineNum))
     let b:prevLineIndentation = indent(s:getPrevNonBlankLineNum(b:originalLineNum))
