@@ -145,7 +145,7 @@ function cosco_eval#ShouldNotSkip()
     elseif b:cls[0] == '{' 
 
         if g:cosco_debug
-            echom "[Cosco:Curly Bracket] Opening in new line"
+            echom "[Cosco:Curly Bracket] Opening in current line"
         endif
 
         return 0
@@ -160,10 +160,7 @@ function cosco_eval#ShouldNotSkip()
     "   |                   Cursor
     "   ^
     " Cursor
-    elseif b:pls[0] == '}' || 
-                \ (
-                \   b:pls =~ '}$' && synIDattr(synID(b:pln, stridx(b:pl, '('), 1), 'name') =~ '\cfunc'
-                \ )
+    elseif b:pls[0] == '}' || b:pls =~ '}$'
         if g:cosco_debug
             echom "[Cosco:Curly Bracket] Closed"
         endif
