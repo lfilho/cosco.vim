@@ -81,7 +81,7 @@ function cosco#AdaptCode()
             let b:cosco_ret_value = cosco_eval#ShouldAdd()
                 
         elseif cosco_eval#ShouldRemove()
-            call cosco_setter#RemoveEndCharacter(b:pln)
+            let b:cosco_ret_value = 4
         endif
     endif
 
@@ -94,11 +94,9 @@ function cosco#AdaptCode()
     elseif b:cosco_ret_value == 2 || b:cosco_ret_value == 3
 
         if b:cosco_ret_value == 2
-            "echo "Add a comma"
             call cosco_setter#AddComma(b:pln)
 
         elseif b:cosco_ret_value == 3
-            "echo "Add a semicolon"
             call cosco_setter#AddSemicolon(b:pln)
         endif
 
@@ -128,9 +126,12 @@ function cosco#AdaptCode()
         " the line has already some contents.
         
         if b:cls == '' && indent(b:pln) > 0
-            echom "Test"
             call setline(b:cln, py3eval("' ' * ". indent(b:pln)))
         endif
+
+    elseif b:cosco_ret_value == 4
+        call cosco_setter#RemoveEndCharacter(b:pln)
+
     endif
 
     return 0

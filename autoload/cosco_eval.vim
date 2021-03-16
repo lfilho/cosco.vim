@@ -424,6 +424,21 @@ function cosco_eval#Specials()
             endif
             return 0
 
+        " C++
+        " It might happen, that the programmer wants to print something out like this:
+        "   
+        "   std::cout << "Hello there!" << name
+        "       << "General Kenobi!" |
+        "                            ^
+        "                         Cursor
+        "
+        " Cosco has to check, if we're continueing an output.
+        elseif b:cls =~ '<<'
+            if g:cosco_debug
+                echom "[Cosco: C++] Multiline stdout"
+            endif
+            return 4
+
         endif
 
     " ---------

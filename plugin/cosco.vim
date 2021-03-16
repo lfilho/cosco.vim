@@ -14,10 +14,10 @@
 " =========================================================
 
 " don't reload the plugin too often
-"if exists("b:cosco_initialised")
-"    finish
-"endif
-"let b:cosco_initialised = 1
+if exists("b:cosco_initialised")
+    finish
+endif
+let b:cosco_initialised = 1
 
 " =================
 " 1. Variables 
