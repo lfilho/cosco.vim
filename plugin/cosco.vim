@@ -62,6 +62,9 @@ endif
 "   1 => Enable cosco :)
 if !exists("g:cosco_enable")
     let g:cosco_enable = 1
+
+elseif &readonly || get(g:cosco_whitelist, &ft, 0)
+    let g:cosco_enable = 0
 endif
 
 " Look, if cosco should try to map the main function

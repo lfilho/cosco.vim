@@ -18,13 +18,12 @@
 "   2. cosco_eval#ShouldAdd()
 "   3. cosco_eval#ShouldRemove()
 "   4. cosco_eval#Specials()
-"   5. cosoc_eval#Manual()
 "
 " Each function has a little description for more information.
 " =========================================================
 
 " ===========================
-" 1. cosco_eval#Decide()
+" 1. cosco_eval#ShouldNotSkip()
 " ===========================
 " Usage:
 "   It goes through some general situation where we wouldn't add a semicolon/comma here.
@@ -32,6 +31,7 @@
 " Return values:
 "   0 => No, you can skip
 "   1 => Yes, don't skip
+"
 function cosco_eval#ShouldNotSkip()
 
     " ==================

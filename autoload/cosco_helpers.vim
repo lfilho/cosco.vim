@@ -60,6 +60,26 @@ function cosco_helpers#ActivateCosco()
     endif
 endfunction
 
+" This function loads the given information around the current position
+" to interact with it. After calling this function, you can access these
+" variables anywhere.
+function cosco_helpers#get_information()
+    " current line
+    let b:cln = line('.')                         " cln = *C*urrent *L*ine *N*um
+    let b:cl  = getline(b:cln)                    " cl  = *C*urrent *L*ine
+    let b:cls = cosco_helpers#Strip(b:cl)         " cls = *C*urrent *L*ine *S*tripped
+
+    " next line
+    let b:nln = nextnonblank(b:cln + 1)           " nln = *N*ext *L*ine *N*umber
+    let b:nl  = getline(nextnonblank(b:cln + 1))  " nl  = *N*ext *L*ine
+    let b:nls = cosco_helpers#Strip(b:nl)         " nls = *N*ext *L*ine *S*tripped
+    
+    " previous line
+    let b:pln = prevnonblank(b:cln - 1)           " pln = *P*revious *L*ine *N*umber
+    let b:pl  = getline(prevnonblank(b:cln - 1))  " pl  = *P*revious *L*ine
+    let b:pls = cosco_helpers#Strip(b:pl)         " pl  = *P*revious *L*ine
+endfunction
+
 " --------------------
 " Strip functions 
 " --------------------

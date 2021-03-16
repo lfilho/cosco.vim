@@ -6,16 +6,6 @@
 "     of the plugin.
 " =========================================================
 
-" =================
-" Preparations 
-" =================
-" disable cosco if:
-"   1. The current file is only readable
-"   2. The current file isn't in the whitelist
-if &readonly || get(g:cosco_whitelist, &ft, -1) == -1
-    let g:cosco_enable = 0
-endif
-
 " ############################
 "       Main function
 " ############################
@@ -45,21 +35,7 @@ function cosco#AdaptCode()
     " ==========================
     " Gathering information 
     " ==========================
-
-    " current line
-    let b:cln = line('.')                         " cln = *C*urrent *L*ine *N*um
-    let b:cl  = getline(b:cln)                    " cl  = *C*urrent *L*ine
-    let b:cls = cosco_helpers#Strip(b:cl)         " cls = *C*urrent *L*ine *S*tripped
-
-    " next line
-    let b:nln = nextnonblank(b:cln + 1)           " nln = *N*ext *L*ine *N*umber
-    let b:nl  = getline(nextnonblank(b:cln + 1))  " nl  = *N*ext *L*ine
-    let b:nls = cosco_helpers#Strip(b:nl)         " nls = *N*ext *L*ine *S*tripped
-    
-    " previous line
-    let b:pln = prevnonblank(b:cln - 1)           " pln = *P*revious *L*ine *N*umber
-    let b:pl  = getline(prevnonblank(b:cln - 1))  " pl  = *P*revious *L*ine
-    let b:pls = cosco_helpers#Strip(b:pl)         " pl  = *P*revious *L*ine
+    call cosco_helpers#get_information()
 
     " =============================
     " Evaluating the situation 
