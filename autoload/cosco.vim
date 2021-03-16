@@ -65,9 +65,6 @@ function cosco#AdaptCode()
     " Evaluating the situation 
     " =============================
     " this variable is set after an extra file set its conditions.
-    " Possible values:
-    "   0 => Don't check further
-    "   1 => Do check further
     let b:cosco_ret_value = cosco_eval#Specials()
 
     " if the special cases couldn't find anything

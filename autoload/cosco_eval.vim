@@ -140,22 +140,15 @@ function cosco_eval#ShouldNotSkip()
     "
     "   }
     "
+    " We're not skipping here, because cosco will have placed the semicolon before, so we
+    " need to remove it.
     elseif b:cls[0] == '{' 
 
-        echom "Nope"
-
-        if synIDattr(synID(b:pln, stridx(b:pl, '('), 1), 'name') =~ '\cfunction'
-            if g:cosco_debug
-                echom "[Cosco:Curly Bracket] Function implementation"
-            endif
-        
-        elseif b:pl =~ '\c^struct'
-            if g:cosco_debug
-                echom "[Cosco:Culry Bracket] Struct declaration"
-            endif
+        if g:cosco_debug
+            echom "[Cosco:Curly Bracket] Opening in new line"
         endif
 
-        return 1
+        return 0
 
     " There could be the following cases:
     " 1: It's the ending bracket of a function or a set.
@@ -179,7 +172,7 @@ function cosco_eval#ShouldNotSkip()
     " --------------------------
     " 4. Square brackets [] 
     " --------------------------
-    "  Case:
+    " Case:
     "   User wants to create a multiline-list or something like that
     "   => Don't add a comma/semicolon after the open "["
     "
@@ -362,6 +355,17 @@ function cosco_eval#ShouldRemove()
             echom "[Cosco] Removing comma"
         endif
         return 1
+
+    " In general we don't need a bracket in the previous line, if
+    " we've an open bracket in the beginning like this one:
+    "
+    "   int main()
+    "   {
+    "   ^
+    " Cursor
+    elseif b:cls[0] == '{'
+        return 1
+
     endif
 
     return 0
