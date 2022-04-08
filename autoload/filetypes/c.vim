@@ -1,4 +1,4 @@
-" c behaves like so: if current line include a header, do nothing
+" c behaves like so:  if it's pre-processing, do nothing
 function! filetypes#c#parse()
     if b:currentLine =~ "#"
         let b:wasExtensionExecuted = 1

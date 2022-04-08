@@ -1,4 +1,4 @@
-" cpp behaves like so: if current line include a header, do nothing
+" cpp behaves like so: if it's pre-processing, do nothing
 function! filetypes#cpp#parse()
     if b:currentLine =~ "^#"
         let b:wasExtensionExecuted = 1
